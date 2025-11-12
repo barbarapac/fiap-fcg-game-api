@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>$(TargetFramework)</TargetFramework>
+        <LangVersion>$(LangVersion)</LangVersion>
+        <Nullable>$(Nullable)</Nullable>
+        <ImplicitUsings>$(ImplicitUsings)</ImplicitUsings>
+        <ManagePackageVersionsCentrally>$(ManagePackageVersionsCentrally)</ManagePackageVersionsCentrally>
+        <IsTestProject>$(IsTestProject)</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoBogus" />
+        <PackageReference Include="coverlet.collector" />
+        <PackageReference Include="coverlet.msbuild"/>
+        <PackageReference Include="FluentAssertions" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="Moq" />
+        <PackageReference Include="NUnit.Analyzers" />
+        <PackageReference Include="NUnit3TestAdapter" />
+        <PackageReference Include="xunit" />
+        <PackageReference Include="xunit.runner.visualstudio" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Application\" />
+      <Folder Include="Domin\" />
+      <Folder Include="Infrastructure\" />
+      <Folder Include="WebApi\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Fiap.FCG.Game.Application\Fiap.FCG.Game.Application.csproj" />
+      <ProjectReference Include="..\..\src\Fiap.FCG.Game.Domain\Fiap.FCG.Game.Domain.csproj" />
+      <ProjectReference Include="..\..\src\Fiap.FCG.Game.Infrastructure\Fiap.FCG.Game.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\src\Fiap.FCG.Game.WebApi\Fiap.FCG.Game.WebApi.csproj" />
+    </ItemGroup>
+
+</Project>

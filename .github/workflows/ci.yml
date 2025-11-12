@@ -1,0 +1,75 @@
+#name: CI - Tests
+#
+#permissions:
+#  contents: read
+#  pull-requests: read
+#
+#on:
+#  push:
+#    branches: ["main"]
+#  pull_request:
+#    branches: ["main"]
+#
+#jobs:
+#  build_and_test:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Setup .NET 8
+#        uses: actions/setup-dotnet@v4
+#        with:
+#          dotnet-version: 8.0.x
+#
+#      - name: Install SonarScanner for .NET
+#        run: dotnet tool install --global dotnet-sonarscanner
+#
+#      # remove o arquivo do scanner genérico que é incompatível com o scanner
+#      - name: Remove sonar-project.properties (only for .NET scanner)
+#        run: rm -f sonar-project.properties
+#
+#      # análise .NET
+#      - name: SonarCloud Begin
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#        run: |
+#          dotnet-sonarscanner begin \
+#            /k:"barbarapac_fiap-fcg-user-api" \
+#            /o:"barbarapac" \
+#            /d:sonar.host.url="https://sonarcloud.io" \
+#            /d:sonar.token="${SONAR_TOKEN}" \
+#            /d:sonar.projectBaseDir="${{ github.workspace }}" \
+#            /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" \
+#            /d:sonar.coverage.exclusions="**/*Program.cs,**/*Startup.cs,**/*Migrations/**" \
+#            /d:sonar.exclusions="**/.github/**,**/ci/**,**/cd/**,**/build/**,**/test/**"
+#
+#      - name: Restore
+#        run: dotnet restore Fiap.FCG.User.Api.sln
+#
+#      - name: Build
+#        run: dotnet build Fiap.FCG.User.Api.sln --configuration Release --no-restore
+#
+#      - name: Test with coverage (OpenCover)
+#        run: |
+#          dotnet test test/Fiap.FCG.User.Unit.Test/Fiap.FCG.User.Unit.Test.csproj \
+#            --configuration Release --no-build --logger "trx;LogFileName=test-results.trx" \
+#            /p:CollectCoverage=true \
+#            /p:CoverletOutput=${{ github.workspace }}/test/Fiap.FCG.User.Unit.Test/TestResults/coverage.opencover.xml \
+#            /p:CoverletOutputFormat=opencover
+#
+#      # finaliza e envia a análise para o SonarCloud
+#      - name: SonarCloud End
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#        run: dotnet-sonarscanner end /d:sonar.token="${SONAR_TOKEN}"
+#
+#      # apontar para o caminho do .NET
+#      - name: SonarCloud Quality Gate 
+#        uses: SonarSource/sonarqube-quality-gate-action@v1
+#        with:
+#          scanMetadataReportFile: .sonarqube/out/.sonar/report-task.txt
+#        env: 
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

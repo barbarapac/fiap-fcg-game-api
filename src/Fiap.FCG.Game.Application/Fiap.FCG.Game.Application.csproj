@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>$(TargetFramework)</TargetFramework>
+        <Nullable>$(Nullable)</Nullable>
+        <ImplicitUsings>$(ImplicitUsings)</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MediatR" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Fiap.FCG.Game.Infrastructure\Fiap.FCG.Game.Infrastructure.csproj" />
+    </ItemGroup>
+</Project>
