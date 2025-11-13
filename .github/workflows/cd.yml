@@ -38,7 +38,7 @@
 #          "$HOME/.dotnet/tools/dotnet-ef" database update \
 #            --project src/Fiap.FCG.User.Infrastructure \
 #            --startup-project src/Fiap.FCG.User.WebApi
-#          
+#
 #  build-and-push:
 #    runs-on: ubuntu-latest
 #    needs: migrations
@@ -79,7 +79,7 @@
 #        run: |
 #          TAG="$(echo '${{ steps.meta.outputs.tags }}' | tail -n1 | awk -F: '{print $2}')"
 #          echo "tag=$TAG" >> $GITHUB_OUTPUT
-#          
+#
 #  deploy:
 #    runs-on: ubuntu-latest
 #    needs: build-and-push

@@ -1,0 +1,44 @@
+﻿using System.Threading.Tasks;
+using Fiap.FCG.Game.Application.Jogos.Cadastrar;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+
+namespace Fiap.FCG.Game.WebApi.Jogos.Cadastrar;
+
+[ApiController]
+[Route("api/jogos")]
+[ApiExplorerSettings(GroupName = "Jogos")]
+public class CadastrarJogoController : ControllerBase
+{
+    private readonly IMediator _mediator;
+
+    public CadastrarJogoController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    [SwaggerOperation(
+        Summary = "Cadastra um novo jogo",
+        Description = "Realiza o cadastro de um jogo informando nome, preço."
+    )]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Cadastrar([FromBody] CadastrarJogoCommand command)
+    {
+        var result = await _mediator.Send(command);
+
+        var response = new
+        {
+            sucesso = result.Sucesso,
+            mensagem = result.Sucesso ? "Jogo cadastrado com sucesso." : result.Erro,
+            valor = result.Sucesso ? result.Valor : null
+        };
+
+        return result.Sucesso ? Ok(response) : BadRequest(response);
+    }
+}

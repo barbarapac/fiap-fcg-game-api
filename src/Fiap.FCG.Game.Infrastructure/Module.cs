@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Fiap.FCG.Game.Domain.Jogos;
 using Fiap.FCG.Game.Infrastructure._Shared;
+using Fiap.FCG.Game.Infrastructure.Jogos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,6 +57,6 @@ public static class Module
     
     private static void AddRepositories(IServiceCollection services)
     {
-        // services.AddScoped<IJogoRepository, JogoRepository>();
+        services.AddScoped<IJogoRepository, JogoRepository>();
     }
 }
