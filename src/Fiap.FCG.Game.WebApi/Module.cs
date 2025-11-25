@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
+using Fiap.FCG.Game.WebApi.Notificacoes.Enviar;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
@@ -13,6 +14,12 @@ public static class Module
     {
         AddControllers(services);
         AddSwagger(services);
+        AddJobs(services);
+    }
+    
+    private static void AddJobs(IServiceCollection services)
+    {
+        services.AddHostedService<EnviarNotificacoesJob>();
     }
     
     private static void AddControllers(IServiceCollection services)

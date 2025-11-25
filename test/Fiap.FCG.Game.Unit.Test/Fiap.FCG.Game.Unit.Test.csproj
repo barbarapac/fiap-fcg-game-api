@@ -23,9 +23,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Application\" />
-      <Folder Include="Domin\" />
-      <Folder Include="Infrastructure\" />
       <Folder Include="WebApi\" />
     </ItemGroup>
 

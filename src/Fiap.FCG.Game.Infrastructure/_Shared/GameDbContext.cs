@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Fiap.FCG.Game.Domain.Jogos;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fiap.FCG.Game.Infrastructure._Shared;
 
+[ExcludeFromCodeCoverage]
 public class GameDbContext : DbContext
 {
     public GameDbContext(DbContextOptions<GameDbContext> options) : base(options) { }

@@ -4,6 +4,11 @@
     <PackageVersion Include="AutoBogus" Version="2.13.1" />
     <PackageVersion Include="FluentAssertions" Version="8.5.0" />
     <PackageVersion Include="FluentValidation" Version="12.0.0" />
+    <PackageVersion Include="Google.Protobuf" Version="3.33.1" />
+    <PackageVersion Include="Grpc.AspNetCore" Version="2.71.0" />
+    <PackageVersion Include="Grpc.Net.Client" Version="2.71.0" />
+    <PackageVersion Include="Grpc.Net.ClientFactory" Version="2.71.0" />
+    <PackageVersion Include="Grpc.Tools" Version="2.76.0" />
     <PackageVersion Include="MediatR" Version="12.4.1" />
     <PackageVersion Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.18" />
@@ -24,6 +29,6 @@
     <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
-    <PackageVersion Include="coverlet.msbuild" Version="6.0.0"/>
+    <PackageVersion Include="coverlet.msbuild" Version="6.0.0" />
   </ItemGroup>
 </Project>

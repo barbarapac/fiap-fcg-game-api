@@ -2,8 +2,13 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Fiap.FCG.Game.Domain.Jogos;
+using Fiap.FCG.Game.Domain.Notificacoes;
+using Fiap.FCG.Game.Domain.Promocoes;
 using Fiap.FCG.Game.Infrastructure._Shared;
 using Fiap.FCG.Game.Infrastructure.Jogos;
+using Fiap.FCG.Game.Infrastructure.Notificacoes;
+using Fiap.FCG.Game.Infrastructure.Promocoes;
+using Fiap.FCG.Game.Infrastructure.Usuarios;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +24,13 @@ public static class Module
         AddDbContext(services, configuration);
         AddRepositories(services);
         AddAuthentication(services, configuration);
+        AddServices(services);
+    }
+
+    private static void AddServices(IServiceCollection services)
+    {
+        services.AddScoped<IEmailSender, EmailSender>();
+        services.AddScoped<IUsuarioNotificationGateway, UsuarioNotificationGateway>();
     }
 
     private static void AddAuthentication(IServiceCollection services, IConfiguration configuration)
@@ -36,9 +48,9 @@ public static class Module
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer              = fromEnvJwtIssuer,
-                    ValidAudience            = fromEnvJwtAudience,
-                    IssuerSigningKey         = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(fromEnvJwtKey!))
+                    ValidIssuer      = fromEnvJwtIssuer,
+                    ValidAudience    = fromEnvJwtAudience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(fromEnvJwtKey!))
                 };
             });
 
@@ -47,8 +59,8 @@ public static class Module
 
     private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
     {
-        var fromEnv          = Environment.GetEnvironmentVariable("USER_CONNECTION_STRING");
-        var fromConfig       = configuration["USER_CONNECTION_STRING"];
+        var fromEnv    = Environment.GetEnvironmentVariable("GAME_CONNECTION_STRING");
+        var fromConfig = configuration["GAME_CONNECTION_STRING"];
         var connectionString = !string.IsNullOrWhiteSpace(fromEnv) ? fromEnv : fromConfig;
 
         services.AddDbContext<GameDbContext>(options =>
@@ -58,5 +70,7 @@ public static class Module
     private static void AddRepositories(IServiceCollection services)
     {
         services.AddScoped<IJogoRepository, JogoRepository>();
+        services.AddScoped<IPromocaoRepository, PromocaoRepository>();
+        services.AddScoped<INotificacaoRepository, NotificacaoRepository>();
     }
 }

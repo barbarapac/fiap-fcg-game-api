@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Fiap.FCG.Game.Application.Notificacoes.Consultar;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Fiap.FCG.Game.Application;
@@ -10,5 +11,8 @@ public static class Module
     {
         services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssemblyContaining(typeof(Module)));
+        
+        
+        services.AddScoped<IConsultaNotificacaoQuery, ConsultaNotificacaoQuery>();
     }
 }

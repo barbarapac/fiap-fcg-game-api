@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "Fiap.FCG.User.WebApi.Protos";
+
+package usuario;
+
+service UsuarioService {
+  rpc ObterUsuariosComNotificacoes (ObterUsuariosComNotificacoesRequest) returns (ObterUsuariosComNotificacoesResponse);
+}
+
+message ObterUsuariosComNotificacoesRequest {
+}
+
+message ObterUsuariosComNotificacoesResponse {
+  repeated UsuarioDto usuarios = 1;
+}
+
+message UsuarioDto {
+  int32 id = 1;
+  string nome = 2;
+  string email = 3;
+}

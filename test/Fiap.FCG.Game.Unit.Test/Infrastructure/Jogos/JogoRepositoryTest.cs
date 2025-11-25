@@ -1,82 +1,129 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Fiap.FCG.Game.Domain.Jogos;
 using Fiap.FCG.Game.Unit.Test.Infrastructure.Jogos.Fakers;
 using Fiap.FCG.Game.Unit.Test.Infrastructure.Jogos.Fixtures;
 using FluentAssertions;
 using Xunit;
 
-namespace Fiap.FCG.Game.Unit.Test.Infrastructure.Jogos;
-
-public class JogoRepositoryTest
+namespace Fiap.FCG.Game.Unit.Test.Infrastructure.Jogos
 {
-    [Fact]
-    public async Task ObterPorNome_QuandoJogoExiste_DeveRetornarJogo()
+    public class JogoRepositoryTest : IClassFixture<JogoRepositoryFixture>
     {
-        // Arrange
-        using var fixture = new JogoRepositoryFixture();
-        var jogo = JogoFaker.ComNome("Hollow Knight");
-        await fixture.Context.Set<Jogo>().AddAsync(jogo);
-        await fixture.Context.SaveChangesAsync();
+        private readonly JogoRepositoryFixture _fixture;
 
-        // Act
-        var resultado = await fixture.Repository.ObterPorNome("HOLLOW KNIGHT");
+        public JogoRepositoryTest(JogoRepositoryFixture fixture)
+        {
+            _fixture = fixture;
+        }
 
-        // Assert
-        resultado.Should().NotBeNull();
-        resultado!.Nome.Should().Be(jogo.Nome);
+        [Fact]
+        public async Task ObterPorIdAsync_IdExistente_DeveRetornarJogo()
+        {
+            // Arrange
+            var jogo = JogoFaker.Valido("The last of us");
+            _fixture.Context.Add(jogo);
+            await _fixture.Context.SaveChangesAsync();
+
+            // Act
+            var resultado = await _fixture.Repository.ObterPorIdAsync(jogo.Id);
+
+            // Assert
+            resultado.Should().BeEquivalentTo(jogo);
+        }
+
+        [Fact]
+        public async Task ObterPorNome_NomeExistente_DeveRetornarJogo()
+        {
+            // Arrange
+            var jogo = JogoFaker.Valido("Elden Ring");
+            _fixture.Context.Add(jogo);
+            await _fixture.Context.SaveChangesAsync();
+
+            // Act
+            var resultado = await _fixture.Repository.ObterPorNome(jogo.Nome);
+
+            // Assert
+            resultado.Should().BeEquivalentTo(jogo);
+        }
+
+        [Fact]
+        public async Task ObterTodosAsync_QuandoChamado_DeveRetornarTodosOsJogos()
+        {
+            // Arrange
+            var jogos = JogoFaker.ListaValida();
+            _fixture.Context.AddRange(jogos);
+            await _fixture.Context.SaveChangesAsync();
+
+            // Act
+            var resultado = await _fixture.Repository.ObterTodosAsync();
+
+            // Assert
+            resultado.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task ObterPorIdsAsync_IdsValidos_DeveRetornarJogosEsperados()
+        {
+            // Arrange
+            var jogos = JogoFaker.ListaValida();
+            _fixture.Context.AddRange(jogos);
+            await _fixture.Context.SaveChangesAsync();
+            var ids = jogos.Select(j => j.Id).ToList();
+
+            // Act
+            var resultado = await _fixture.Repository.ObterPorIdsAsync(ids);
+
+            // Assert
+            resultado.Should().BeEquivalentTo(jogos);
+        }
+
+        [Fact]
+        public async Task AdicionarAsync_JogoValido_DevePersistirEDevolverSucesso()
+        {
+            // Arrange
+            var jogo = JogoFaker.Valido("Good");
+
+            // Act
+            var resultado = await _fixture.Repository.AdicionarAsync(jogo);
+
+            // Assert
+            resultado.Sucesso.Should().BeTrue();
+            resultado.Valor.Should().BeEquivalentTo(jogo);
+        }
+
+        [Fact]
+        public async Task AtualizarAsync_JogoValido_DeveAtualizarComSucesso()
+        {
+            // Arrange
+            var jogo = JogoFaker.Valido("Ghost");
+            _fixture.Context.Add(jogo);
+            await _fixture.Context.SaveChangesAsync();
+
+            var novoNome = "Jogo Atualizado";
+            jogo.Atualizar(novoNome, 299);
+
+            // Act
+            await _fixture.Repository.AtualizarAsync(jogo);
+
+            // Assert
+            var atualizado = await _fixture.Repository.ObterPorIdAsync(jogo.Id);
+            atualizado.Nome.Should().Be(novoNome);
+        }
+
+        [Fact]
+        public async Task RemoverAsync_JogoExistente_DeveRemoverComSucesso()
+        {
+            // Arrange
+            var jogo = JogoFaker.Valido("CS");
+            _fixture.Context.Add(jogo);
+            await _fixture.Context.SaveChangesAsync();
+
+            // Act
+            await _fixture.Repository.RemoverAsync(jogo);
+
+            // Assert
+            var resultado = await _fixture.Repository.ObterPorIdAsync(jogo.Id);
+            resultado.Should().BeNull();
+        }
     }
-
-    [Fact]
-    public async Task ObterPorNome_QuandoJogoNaoExiste_DeveRetornarNull()
-    {
-        // Arrange
-        using var fixture = new JogoRepositoryFixture();
-
-        // Act
-        var resultado = await fixture.Repository.ObterPorNome("NAO_EXISTE");
-
-        // Assert
-        resultado.Should().BeNull();
-    }
-
-    [Fact]
-    public async Task ObterAsync_QuandoIdsExistem_DeveRetornarJogos()
-    {
-        // Arrange
-        using var fixture = new JogoRepositoryFixture();
-        var jogo1 = JogoFaker.ComNome("God of War");
-        var jogo2 = JogoFaker.ComNome("Uncharted");
-
-        await fixture.Context.Set<Jogo>().AddRangeAsync(jogo1, jogo2);
-        await fixture.Context.SaveChangesAsync();
-
-        var ids = new List<int> { jogo1.Id, jogo2.Id };
-
-        // Act
-        var jogos = await fixture.Repository.ObterPorIdsAsync(ids);
-
-        // Assert
-        jogos.Should().HaveCount(2);
-        jogos.Select(j => j.Id).Should().Contain(ids);
-    }
-
-    [Fact]
-    public async Task AdicionarAsync_QuandoJogoValido_DevePersistir()
-    {
-        // Arrange
-        using var fixture = new JogoRepositoryFixture();
-        var jogo = JogoFaker.Valido();
-
-        // Act
-        var resultado = await fixture.Repository.AdicionarAsync(jogo);
-
-        // Assert
-        resultado.Sucesso.Should().BeTrue();
-        resultado.Valor.Should().BeEquivalentTo(jogo);
-
-        var persistido = await fixture.Context.Set<Jogo>().FindAsync(jogo.Id);
-        persistido.Should().NotBeNull();
-    }  
 }

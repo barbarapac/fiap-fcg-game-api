@@ -1,3 +1,4 @@
+using System;
 using Fiap.FCG.Game.Application;
 using Fiap.FCG.Game.Infrastructure;
 using Fiap.FCG.Game.WebApi;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Fiap.FCG.User.WebApi.Protos; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +21,14 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddControllers(); 
 builder.Services.AddInfrastructure(builder.Configuration); 
 builder.Services.AddApplication(); 
-builder.Services.AddWebApi(); 
+builder.Services.AddWebApi();
+
+builder.Services.AddGrpcClient<UsuarioService.UsuarioServiceClient>(o =>
+{
+    var url= Environment.GetEnvironmentVariable("URI_USUARIO_API") ?? builder.Configuration["URI_USUARIO_API"];
+    o.Address = new Uri(url);
+});
+
 
 var app = builder.Build();
 
