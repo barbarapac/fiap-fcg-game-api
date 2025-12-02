@@ -9,7 +9,7 @@ public class UsuarioNotificationGatewayMock : Mock<IUsuarioNotificationGateway>
 {
     public void ConfigurarUsuariosNotificaveis(List<UsuarioNotificavelDto> usuarios)
     {
-        Setup(x => x.ObterUsuariosNotificaveisAsync(It.IsAny<CancellationToken>()))
+        Setup(x => x.ObterUsuariosNotificaveisHttpAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(usuarios);
     }
 }

@@ -31,7 +31,7 @@ public class EnviarNotificacaoHandler : IRequestHandler<EnviarNotificacaoCommand
 
     public async Task Handle(EnviarNotificacaoCommand request, CancellationToken cancellationToken)
     {
-        var usuarios = await _usuarioNotificationGateway.ObterUsuariosNotificaveisAsync();
+        var usuarios = await _usuarioNotificationGateway.ObterUsuariosNotificaveisHttpAsync();
 
         if (usuarios.Count == 0) return;
         
@@ -59,8 +59,8 @@ public class EnviarNotificacaoHandler : IRequestHandler<EnviarNotificacaoCommand
                 foreach (var usuarioId in usuariosNaoNotificados)
                 {
                     var usuario = usuarios.First(u => u.Id == usuarioId);
-                    await _emailSender.EnviarAsync(usuario.Email, notificacao.Titulo, notificacao.Mensagem);
                     notificacao.AdicionarEnvio(usuarioId, pj.Id);
+                    // await _emailSender.EnviarAsync(usuario.Email, notificacao.Titulo, notificacao.Mensagem);
                 }
 
                 _notificacaoRepository.Adicionar(notificacao);

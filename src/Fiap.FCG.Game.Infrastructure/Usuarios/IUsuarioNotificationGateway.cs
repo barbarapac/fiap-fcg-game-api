@@ -6,6 +6,9 @@ namespace Fiap.FCG.Game.Infrastructure.Usuarios;
 
 public interface IUsuarioNotificationGateway
 {
-    Task<IList<UsuarioNotificavelDto>> ObterUsuariosNotificaveisAsync(
+    Task<IList<UsuarioNotificavelDto>> ObterUsuariosNotificaveisGrpcAsync(
+        CancellationToken cancellationToken = default);
+    
+    Task<IList<UsuarioNotificavelDto>> ObterUsuariosNotificaveisHttpAsync(
         CancellationToken cancellationToken = default);
 }
