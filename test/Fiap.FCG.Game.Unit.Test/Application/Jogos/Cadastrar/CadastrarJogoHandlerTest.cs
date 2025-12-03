@@ -24,25 +24,31 @@ namespace Fiap.FCG.Game.Unit.Test.Application.Jogos.Cadastrar
             resultado.Sucesso.Should().BeFalse();
             resultado.Erro.Should().Be("Jogo já cadastrado.");
             JogoRepositoryMock.GarantirQueNaoChamouAdicionar();
+            GameEventPublisherMock.GarantirJogoCadastradoPublishAsyncNaoChamado();
         }
 
         [Fact]
-        public async Task Handle_QuandoUsuarioEhValido_DeveAdicionarEDevolverId()
+        public async Task Handle_QuandoUsuarioEhValido_DeveAdicionarEPublicarEvento()
         {
             // Arrange
             var command = CadastrarJogoCommandFaker.Valido();
+
             JogoRepositoryMock.ConfigurarParaRetornarJogoAoObterPorNome(null);
 
-            var usuario = Jogo.Criar(command.Nome, command.Preco).Valor;
-            JogoRepositoryMock.ConfigurarParaRetornarJogoAoAdicionar(Result.Success(usuario));
+            var jogo = Jogo.Criar(command.Nome, command.Preco).Valor;
+
+            JogoRepositoryMock.ConfigurarParaRetornarJogoAoAdicionar(Result.Success(jogo));
+            GameEventPublisherMock.ConfigurarJogoCadastradoPublishAsync();
 
             // Act
             var resultado = await Handler.Handle(command, default);
 
             // Assert
             resultado.Sucesso.Should().BeTrue();
-            resultado.Valor.Should().Be(usuario.Id.ToString());
+            resultado.Valor.Should().Be(jogo.Id.ToString());
+
             JogoRepositoryMock.GarantirChamadaAdicionar();
+            GameEventPublisherMock.GarantirJogoCadastradoPublishAsyncChamado(jogo);
         }
 
         [Fact]
@@ -59,16 +65,17 @@ namespace Fiap.FCG.Game.Unit.Test.Application.Jogos.Cadastrar
             resultado.Sucesso.Should().BeFalse();
             resultado.Erro.Should().Be("Nome é obrigatório.");
             JogoRepositoryMock.GarantirQueNaoChamouAdicionar();
+            GameEventPublisherMock.GarantirJogoCadastradoPublishAsyncNaoChamado();
         }
 
         [Fact]
-        public async Task Handle_QuandoAdicionarRetornaErro_DevePropagarErro()
+        public async Task Handle_QuandoAdicionarRetornaErro_NaoDevePublicarEvento()
         {
             // Arrange
             var command = CadastrarJogoCommandFaker.Valido();
             JogoRepositoryMock.ConfigurarParaRetornarJogoAoObterPorNome(null);
 
-            var usuario = Jogo.Criar(command.Nome, command.Preco).Valor;
+            var jogo = Jogo.Criar(command.Nome, command.Preco).Valor;
             JogoRepositoryMock.ConfigurarParaRetornarJogoAoAdicionar(Result.Failure<Jogo>("Erro ao adicionar"));
 
             // Act
@@ -77,6 +84,7 @@ namespace Fiap.FCG.Game.Unit.Test.Application.Jogos.Cadastrar
             // Assert
             resultado.Sucesso.Should().BeFalse();
             resultado.Erro.Should().Be("Erro ao adicionar");
+            GameEventPublisherMock.GarantirJogoCadastradoPublishAsyncNaoChamado();
         }
     }
 }

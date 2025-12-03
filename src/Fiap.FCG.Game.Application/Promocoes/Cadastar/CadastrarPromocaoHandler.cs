@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Fiap.FCG.Game.Domain._Shared;
 using Fiap.FCG.Game.Domain.Jogos;
 using Fiap.FCG.Game.Domain.Promocoes;
+using Fiap.FCG.Game.Infrastructure.PublisherEvent.PromocaoEvent;
 using MediatR;
 
 namespace Fiap.FCG.Game.Application.Promocoes.Cadastar;
@@ -12,13 +13,16 @@ public class CadastrarPromocaoHandler : IRequestHandler<CadastrarPromocaoCommand
 {
     private readonly IJogoRepository _jogoRepository;
     private readonly IPromocaoRepository _promocaoRepository;
+    private readonly IPromocaoEventPublisher _publisher;
 
     public CadastrarPromocaoHandler(
         IJogoRepository jogoRepository,
-        IPromocaoRepository promocaoRepository)
+        IPromocaoRepository promocaoRepository, 
+        IPromocaoEventPublisher publisher)
     {
         _jogoRepository = jogoRepository;
         _promocaoRepository = promocaoRepository;
+        _publisher = publisher;
     }
 
     public async Task<Result<string>> Handle(CadastrarPromocaoCommand request, CancellationToken cancellationToken)
@@ -55,6 +59,8 @@ public class CadastrarPromocaoHandler : IRequestHandler<CadastrarPromocaoCommand
         result.Valor.AdicionarJogos(request.JogosIds);
         
         await _promocaoRepository.AdicionarAsync(result.Valor);
+
+        await _publisher.PromocaoCadastradaPublishAsync(result.Valor);
         
         return Result.Success(result.Valor.Nome);
     }

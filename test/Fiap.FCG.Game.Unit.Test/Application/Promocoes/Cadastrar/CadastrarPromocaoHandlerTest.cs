@@ -23,6 +23,7 @@ public class CadastrarPromocaoHandlerTest : CadastrarPromocaoHandlerFixture
         // Assert
         result.Sucesso.Should().BeFalse();
         result.Erro.Should().Be("Promoção já cadastrada.");
+        PromocaoEventPublisherMock.GarantirPromocaoCadastradaPublishAsyncNaoChamado();
     }
 
     [Fact]
@@ -38,6 +39,7 @@ public class CadastrarPromocaoHandlerTest : CadastrarPromocaoHandlerFixture
         // Assert
         result.Sucesso.Should().BeFalse();
         result.Erro.Should().NotBeNullOrWhiteSpace();
+        PromocaoEventPublisherMock.GarantirPromocaoCadastradaPublishAsyncNaoChamado();
     }
 
     [Fact]
@@ -53,6 +55,7 @@ public class CadastrarPromocaoHandlerTest : CadastrarPromocaoHandlerFixture
         // Assert
         result.Sucesso.Should().BeFalse();
         result.Erro.Should().Be("Promoção deve conter pelo menos um jogo.");
+        PromocaoEventPublisherMock.GarantirPromocaoCadastradaPublishAsyncNaoChamado();
     }
 
     [Fact]
@@ -69,8 +72,9 @@ public class CadastrarPromocaoHandlerTest : CadastrarPromocaoHandlerFixture
         // Assert
         result.Sucesso.Should().BeFalse();
         result.Erro.Should().Be("Um ou mais jogos informados não existem.");
+        PromocaoEventPublisherMock.GarantirPromocaoCadastradaPublishAsyncNaoChamado();
     }
-    
+
     [Fact]
     public async Task Handle_QuandoPossuiPromocaoJaCadastrado_DeveRetornarErro()
     {
@@ -87,10 +91,11 @@ public class CadastrarPromocaoHandlerTest : CadastrarPromocaoHandlerFixture
 
         // Assert
         result.Sucesso.Should().BeFalse();
+        PromocaoEventPublisherMock.GarantirPromocaoCadastradaPublishAsyncNaoChamado();
     }
 
     [Fact]
-    public async Task Handle_QuandoValido_DeveCadastrarComSucesso()
+    public async Task Handle_QuandoValido_DeveCadastrarComSucessoEPublicarEvento()
     {
         // Arrange
         var command = CadastrarPromocaoCommandFaker.Valido();
@@ -99,6 +104,7 @@ public class CadastrarPromocaoHandlerTest : CadastrarPromocaoHandlerFixture
         PromocaoRepositoryMock.ConfigurarExisteAsync(command.Nome, false);
         PromocaoRepositoryMock.JogoNaoPossuiPromocaoCadastrada();
         JogoRepositoryMock.ConfigurarObterAsync(command.JogosIds, jogos);
+        PromocaoEventPublisherMock.ConfigurarPromocaoCadastradaPublishAsync();
 
         // Act
         var result = await Handler.Handle(command, default);
@@ -106,6 +112,8 @@ public class CadastrarPromocaoHandlerTest : CadastrarPromocaoHandlerFixture
         // Assert
         result.Sucesso.Should().BeTrue();
         result.Valor.Should().Be(command.Nome);
+
         PromocaoRepositoryMock.GarantirAdicao();
+        PromocaoEventPublisherMock.GarantirPromocaoCadastradaPublishAsyncChamado();
     }
 }

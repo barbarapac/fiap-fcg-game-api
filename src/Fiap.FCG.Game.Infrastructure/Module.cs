@@ -8,6 +8,8 @@ using Fiap.FCG.Game.Infrastructure._Shared;
 using Fiap.FCG.Game.Infrastructure.Jogos;
 using Fiap.FCG.Game.Infrastructure.Notificacoes;
 using Fiap.FCG.Game.Infrastructure.Promocoes;
+using Fiap.FCG.Game.Infrastructure.PublisherEvent.GameEvent;
+using Fiap.FCG.Game.Infrastructure.PublisherEvent.PromocaoEvent;
 using Fiap.FCG.Game.Infrastructure.Usuarios;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +27,13 @@ public static class Module
         AddRepositories(services);
         AddAuthentication(services, configuration);
         AddServices(services);
+        AddPublishers(services);
+    }
+
+    private static void AddPublishers(IServiceCollection services)
+    {
+        services.AddScoped<IPromocaoEventPublisher, PromocaoEventPublisher>();
+        services.AddScoped<IGameEventPublisher, GameEventPublisher>();
     }
 
     private static void AddServices(IServiceCollection services)

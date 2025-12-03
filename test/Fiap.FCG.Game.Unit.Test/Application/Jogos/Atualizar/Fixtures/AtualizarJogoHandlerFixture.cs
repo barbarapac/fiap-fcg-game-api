@@ -7,10 +7,12 @@ public abstract class AtualizarJogoHandlerFixture
 {
     protected JogoRepositoryMock JogoRepositoryMock { get; }
     protected AtualizarJogoHandler Handler { get; }
+    protected GameEventPublisherMock GameEventPublisherMock { get; }
 
     protected AtualizarJogoHandlerFixture()
     {
         JogoRepositoryMock = new JogoRepositoryMock();
-        Handler = new AtualizarJogoHandler(JogoRepositoryMock.Object);
+        GameEventPublisherMock = new GameEventPublisherMock();
+        Handler = new AtualizarJogoHandler(JogoRepositoryMock.Object, GameEventPublisherMock.Object);
     }
 }

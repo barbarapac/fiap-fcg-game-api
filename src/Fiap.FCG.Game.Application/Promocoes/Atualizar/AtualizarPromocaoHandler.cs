@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Fiap.FCG.Game.Domain._Shared;
 using Fiap.FCG.Game.Domain.Jogos;
 using Fiap.FCG.Game.Domain.Promocoes;
+using Fiap.FCG.Game.Infrastructure.PublisherEvent.PromocaoEvent;
 using MediatR;
 
 namespace Fiap.FCG.Game.Application.Promocoes.Atualizar;
@@ -13,13 +14,15 @@ public class AtualizarPromocaoHandler : IRequestHandler<AtualizarPromocaoCommand
 {
     private readonly IJogoRepository _jogoRepository;
     private readonly IPromocaoRepository _promocaoRepository;
+    private readonly IPromocaoEventPublisher _publisher;
 
     public AtualizarPromocaoHandler(
         IJogoRepository jogoRepository,
-        IPromocaoRepository promocaoRepository)
+        IPromocaoRepository promocaoRepository, IPromocaoEventPublisher publisher)
     {
         _jogoRepository = jogoRepository;
         _promocaoRepository = promocaoRepository;
+        _publisher = publisher;
     }
 
     public async Task<Result<string>> Handle(AtualizarPromocaoCommand request, CancellationToken cancellationToken)
@@ -73,6 +76,10 @@ public class AtualizarPromocaoHandler : IRequestHandler<AtualizarPromocaoCommand
 
         promocao.AtualizarJogos(request.JogosIds!);
         
-        return await _promocaoRepository.AtualizarAsync(promocao);
+        var result = await _promocaoRepository.AtualizarAsync(promocao);
+        
+        await _publisher.PromocaEditadaPublishAsync(promocao);
+
+        return result;
     }
 }

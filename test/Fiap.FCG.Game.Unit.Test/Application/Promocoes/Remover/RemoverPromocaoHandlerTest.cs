@@ -24,6 +24,7 @@ public class RemoverPromocaoHandlerTest : RemoverPromocaoHandlerFixture
         result.Sucesso.Should().BeFalse();
         result.Erro.Should().Be("A promoção informada não existe");
         PromocaoRepositoryMock.GarantirConsultaPorId(comando.PromocaoId);
+        PromocaoEventPublisherMock.GarantirPromocaoRemovidaPublishAsyncChamado(null); // aceita null pois é isso que o handler envia
     }
 
     [Fact]
@@ -34,6 +35,7 @@ public class RemoverPromocaoHandlerTest : RemoverPromocaoHandlerFixture
         var promocao = PromocaoFaker.Valida();
         PromocaoRepositoryMock.ConfigurarObterPorId(promocao);
         PromocaoRepositoryMock.ConfigurarExcluir(promocao, Result.Success("removido"));
+        PromocaoEventPublisherMock.ConfigurarPromocaoRemovidaPublishAsync();
 
         // Act
         var result = await Handler.Handle(comando, default);
@@ -41,8 +43,10 @@ public class RemoverPromocaoHandlerTest : RemoverPromocaoHandlerFixture
         // Assert
         result.Sucesso.Should().BeTrue();
         result.Valor.Should().Be("removido");
+
         PromocaoRepositoryMock.GarantirConsultaPorId(comando.PromocaoId);
         PromocaoRepositoryMock.GarantirExclusao(promocao);
+        PromocaoEventPublisherMock.GarantirPromocaoRemovidaPublishAsyncChamado(promocao);
     }
 
     [Fact]
@@ -53,6 +57,7 @@ public class RemoverPromocaoHandlerTest : RemoverPromocaoHandlerFixture
         var promocao = PromocaoFaker.Valida();
         PromocaoRepositoryMock.ConfigurarObterPorId(promocao);
         PromocaoRepositoryMock.ConfigurarExcluir(promocao, Result.Failure<string>("erro ao excluir"));
+        PromocaoEventPublisherMock.ConfigurarPromocaoRemovidaPublishAsync();
 
         // Act
         var result = await Handler.Handle(comando, default);
@@ -60,6 +65,8 @@ public class RemoverPromocaoHandlerTest : RemoverPromocaoHandlerFixture
         // Assert
         result.Sucesso.Should().BeFalse();
         result.Erro.Should().Be("erro ao excluir");
+
         PromocaoRepositoryMock.GarantirExclusao(promocao);
+        PromocaoEventPublisherMock.GarantirPromocaoRemovidaPublishAsyncChamado(promocao);
     }
 }

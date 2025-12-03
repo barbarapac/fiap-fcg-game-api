@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Fiap.FCG.Game.Domain._Shared;
 using Fiap.FCG.Game.Domain.Jogos;
+using Fiap.FCG.Game.Infrastructure.PublisherEvent.GameEvent;
 using MediatR;
 
 namespace Fiap.FCG.Game.Application.Jogos.Atualizar
@@ -9,10 +10,12 @@ namespace Fiap.FCG.Game.Application.Jogos.Atualizar
     public class AtualizarJogoHandler : IRequestHandler<AtualizarJogoCommand, Result<bool>>
     {
         private readonly IJogoRepository _repository;
+        private readonly IGameEventPublisher _publisher;
 
-        public AtualizarJogoHandler(IJogoRepository repository)
+        public AtualizarJogoHandler(IJogoRepository repository, IGameEventPublisher publisher)
         {
             _repository = repository;
+            _publisher = publisher;
         }
 
         public async Task<Result<bool>> Handle(AtualizarJogoCommand request, CancellationToken cancellationToken)
@@ -23,6 +26,7 @@ namespace Fiap.FCG.Game.Application.Jogos.Atualizar
 
             jogo.Atualizar(request.Nome, request.Preco);
             await _repository.AtualizarAsync(jogo);
+            await _publisher.JogoEditadoPublishAsync(jogo);
 
             return Result.Success(true);
         }

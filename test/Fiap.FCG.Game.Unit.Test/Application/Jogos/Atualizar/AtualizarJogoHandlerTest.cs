@@ -22,8 +22,10 @@ public class AtualizarJogoHandlerTest : AtualizarJogoHandlerFixture
         // Assert
         resultado.Sucesso.Should().BeFalse();
         resultado.Erro.Should().Be("Jogo não encontrado.");
+
         JogoRepositoryMock.GarantirObterPorIdChamado(command.Id);
         JogoRepositoryMock.GarantirAtualizarNaoChamado();
+        GameEventPublisherMock.GarantirJogoEditadoPublishAsyncNaoChamado();
     }
 
     [Fact]
@@ -33,6 +35,7 @@ public class AtualizarJogoHandlerTest : AtualizarJogoHandlerFixture
         var command = AtualizarJogoCommandFaker.Valido();
         var jogo = JogoFaker.Valido();
         JogoRepositoryMock.ConfigurarObterPorIdRetornando(jogo);
+        GameEventPublisherMock.ConfigurarJogoEditadoPublishAsync();
 
         // Act
         var resultado = await Handler.Handle(command, CancellationToken.None);
@@ -40,7 +43,9 @@ public class AtualizarJogoHandlerTest : AtualizarJogoHandlerFixture
         // Assert
         resultado.Sucesso.Should().BeTrue();
         resultado.Valor.Should().BeTrue();
+
         JogoRepositoryMock.GarantirObterPorIdChamado(command.Id);
         JogoRepositoryMock.GarantirAtualizarChamado(jogo);
+        GameEventPublisherMock.GarantirJogoEditadoPublishAsyncChamado(jogo);
     }
 }

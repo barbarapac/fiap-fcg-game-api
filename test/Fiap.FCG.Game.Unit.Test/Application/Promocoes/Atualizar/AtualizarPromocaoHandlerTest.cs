@@ -23,6 +23,7 @@ public class AtualizarPromocaoHandlerTest : AtualizarPromocaoHandlerFixture
         // Assert
         result.Sucesso.Should().BeFalse();
         result.Erro.Should().Be("Promoção não encontrada.");
+        PromocaoEventPublisherMock.GarantirPromocaoEditadaPublishAsyncNaoChamado();
     }
 
     [Fact]
@@ -41,6 +42,7 @@ public class AtualizarPromocaoHandlerTest : AtualizarPromocaoHandlerFixture
         // Assert
         result.Sucesso.Should().BeFalse();
         result.Erro.Should().Be("Um ou mais jogos informados não existem.");
+        PromocaoEventPublisherMock.GarantirPromocaoEditadaPublishAsyncNaoChamado();
     }
 
     [Fact]
@@ -61,10 +63,11 @@ public class AtualizarPromocaoHandlerTest : AtualizarPromocaoHandlerFixture
         // Assert
         result.Sucesso.Should().BeFalse();
         result.Erro.Should().Be($"Os jogos {string.Join(", ", command.JogosIds!)} já estão vinculados a outras promoções.");
+        PromocaoEventPublisherMock.GarantirPromocaoEditadaPublishAsyncNaoChamado();
     }
 
     [Fact]
-    public async Task Handle_QuandoDadosValidos_DeveAtualizarComSucesso()
+    public async Task Handle_QuandoDadosValidos_DeveAtualizarComSucessoEPublicarEvento()
     {
         // Arrange
         var command     = AtualizarPromocaoCommandFaker.Valido();
@@ -76,6 +79,7 @@ public class AtualizarPromocaoHandlerTest : AtualizarPromocaoHandlerFixture
         JogoRepositoryMock.ConfigurarObterAsync(command.JogosIds!, jogos);
         PromocaoRepositoryMock.ConfigurarObterPorJogosIds(semConflito);
         PromocaoRepositoryMock.ConfigurarAtualizarAsync(Result.Success("Atualizado"));
+        PromocaoEventPublisherMock.ConfigurarPromocaoEditadaPublishAsync();
 
         // Act
         var result = await Handler.Handle(command, CancellationToken.None);
@@ -83,5 +87,6 @@ public class AtualizarPromocaoHandlerTest : AtualizarPromocaoHandlerFixture
         // Assert
         result.Sucesso.Should().BeTrue();
         result.Valor.Should().Be("Atualizado");
+        PromocaoEventPublisherMock.GarantirPromocaoEditadaPublishAsyncChamado(promocao);
     }
 }

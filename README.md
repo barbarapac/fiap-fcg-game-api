@@ -55,9 +55,9 @@ Certifique-se de usar a porta certa, por exemplo: 5433.
 "JWT_KEY": "chave-super-secreta-para-assinar-jwt",
 "JWT_ISSUER": "Fiap.FCG",
 "JWT_AUDIENCE": "Fiap.FCG",
-"ConnectionStrings": {
-  "UsuarioService": "https://localhost:5001"
-}
+"URI_USUARIO_API": "http://localhost:8181",
+"SERVICEBUS_CONNECTION": "Endpoint=sb://fiap-games-bus.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=...",
+"ENVIA_NOTIFICACAO_INTERVALO_MINUTOS": 10
 ```
 
 </details> 
@@ -90,6 +90,7 @@ Acesse: [https://localhost:5000/swagger](https://localhost:5000/swagger)
 | Swashbuckle (Swagger) | [https://github.com/domaindrivendev/Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)                                 |
 | MediatR               | [https://github.com/jbogard/MediatR](https://github.com/jbogard/MediatR)                                                                               |
 | gRPC                  | [https://grpc.io/docs/languages/csharp/](https://grpc.io/docs/languages/csharp/)                                                                       |
+| Azure Service Bus     | [https://learn.microsoft.com/en-us/azure/service-bus-messaging/](https://learn.microsoft.com/en-us/azure/service-bus-messaging/)                     |
 
 ### Variáveis de Ambiente
 
@@ -99,7 +100,9 @@ Acesse: [https://localhost:5000/swagger](https://localhost:5000/swagger)
 | `JWT_KEY`                   | Chave secreta para assinar o token JWT | Sim         | `"minha-chave-super-secreta"` |
 | `JWT_ISSUER`                | Emissor do token JWT                   | Sim         | `"Fiap.FCG"`                  |
 | `JWT_AUDIENCE`              | Público-alvo do token JWT              | Sim         | `"Fiap.FCG"`                  |
-| `ConnectionStrings:UsuarioService` | URL do microsserviço de usuários | Sim         | `"https://localhost:5001"`    |
+| `URI_USUARIO_API`               | URL do microsserviço de usuários | Sim         | `"http://localhost:8181"`      |
+| `SERVICEBUS_CONNECTION`         | Connection string do Azure Service Bus | Sim | `"Endpoint=sb://fiap-games-bus.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=..."` |
+| `ENVIA_NOTIFICACAO_INTERVALO_MINUTOS` | Intervalo em minutos para envio de notificações | Não | `10` |
 
 ## Funcionalidades
 
@@ -116,6 +119,7 @@ Acesse: [https://localhost:5000/swagger](https://localhost:5000/swagger)
 - Sistema de envio de notificações por email
 - Integração com serviço de usuários para obter lista de usuários
 - Controle de usuários já notificados para evitar spam
+- Processamento assíncrono via Azure Service Bus
 
 ## Integrações
 
@@ -123,3 +127,9 @@ Acesse: [https://localhost:5000/swagger](https://localhost:5000/swagger)
 O microsserviço se integra com o serviço de usuários via HTTP para:
 - Obter lista de usuários que recebem notificações
 - Endpoint: `GET /usuarios/notificacoes`
+
+### Azure Service Bus
+Utilizado para processamento assíncrono de mensagens:
+- Envio de notificações em background
+- Processamento de eventos de promoções
+- Garantia de entrega e retry automático

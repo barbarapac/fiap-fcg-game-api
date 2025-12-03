@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Fiap.FCG.Game.Domain._Shared;
 using Fiap.FCG.Game.Domain.Jogos;
+using Fiap.FCG.Game.Infrastructure.PublisherEvent.GameEvent;
 using MediatR;
 
 namespace Fiap.FCG.Game.Application.Jogos.Cadastrar
@@ -9,10 +10,12 @@ namespace Fiap.FCG.Game.Application.Jogos.Cadastrar
     public class CadastrarJogoHandler : IRequestHandler<CadastrarJogoCommand, Result<string>>
     {
         private readonly IJogoRepository _repository;
+        private readonly IGameEventPublisher _publisher;
 
-        public CadastrarJogoHandler(IJogoRepository repository)
+        public CadastrarJogoHandler(IJogoRepository repository, IGameEventPublisher publisher)
         {
             _repository = repository;
+            _publisher = publisher;
         }
 
         public async Task<Result<string>> Handle(CadastrarJogoCommand request, CancellationToken cancellationToken)
@@ -33,9 +36,14 @@ namespace Fiap.FCG.Game.Application.Jogos.Cadastrar
 
             var adicionarResult = await _repository.AdicionarAsync(resultado.Valor);
 
-            return !adicionarResult.Sucesso
-                ? Result.Failure<string>(adicionarResult.Erro)
-                : Result.Success(adicionarResult.Valor.Id.ToString());
+            if (!adicionarResult.Sucesso)
+            {
+                return Result.Failure<string>(adicionarResult.Erro);
+            }
+            
+            await _publisher.JogoCadastradoPublishAsync(adicionarResult.Valor);
+            
+            return Result.Success(adicionarResult.Valor.Id.ToString());
         }
     }
 }
