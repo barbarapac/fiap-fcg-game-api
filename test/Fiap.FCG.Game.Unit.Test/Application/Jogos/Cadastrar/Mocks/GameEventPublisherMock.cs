@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Fiap.FCG.Game.Application.Eventos.GameEvent;
 using Fiap.FCG.Game.Domain.Jogos;
-using Fiap.FCG.Game.Infrastructure.PublisherEvent.GameEvent;
 using Moq;
 
 namespace Fiap.FCG.Game.Unit.Test.Application.Jogos.Cadastrar.Mocks;

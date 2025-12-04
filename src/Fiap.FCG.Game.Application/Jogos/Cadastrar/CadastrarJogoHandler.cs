@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Fiap.FCG.Game.Application.Eventos.GameEvent;
 using Fiap.FCG.Game.Domain._Shared;
 using Fiap.FCG.Game.Domain.Jogos;
-using Fiap.FCG.Game.Infrastructure.PublisherEvent.GameEvent;
 using MediatR;
 
 namespace Fiap.FCG.Game.Application.Jogos.Cadastrar

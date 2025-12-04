@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Fiap.FCG.Game.Application.Notificacoes.Consultar;
 using Fiap.FCG.Game.Domain.Notificacoes;
 using Fiap.FCG.Game.Domain.Promocoes;
-using Fiap.FCG.Game.Infrastructure._Shared;
 using MediatR;
-using Fiap.FCG.Game.Infrastructure.Usuarios;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Fiap.FCG.Game.Application.Notificacoes.Enviar;
 

@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Fiap.FCG.Game.Application.Notificacoes.Consultar;
 using Fiap.FCG.User.WebApi.Protos;
 using Microsoft.Extensions.Configuration;
 

@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using Fiap.FCG.Game.Application.Eventos.GameEvent;
 using Fiap.FCG.Game.Domain.Jogos;
 using Fiap.FCG.Game.Infrastructure.PublisherEvent._Shared;
 using Microsoft.Extensions.Configuration;

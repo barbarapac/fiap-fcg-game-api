@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Fiap.FCG.Game.Application.Eventos.PromocaoEvent;
 using Fiap.FCG.Game.Domain._Shared;
 using Fiap.FCG.Game.Domain.Jogos;
 using Fiap.FCG.Game.Domain.Promocoes;
-using Fiap.FCG.Game.Infrastructure.PublisherEvent.PromocaoEvent;
 using MediatR;
 
 namespace Fiap.FCG.Game.Application.Promocoes.Cadastar;

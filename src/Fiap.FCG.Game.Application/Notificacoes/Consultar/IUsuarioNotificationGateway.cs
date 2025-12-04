@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Fiap.FCG.Game.Infrastructure.Usuarios;
+namespace Fiap.FCG.Game.Application.Notificacoes.Consultar;
 
 public interface IUsuarioNotificationGateway
 {

@@ -7,7 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Fiap.FCG.Game.Domain\Fiap.FCG.Game.Domain.csproj" />
+		<ProjectReference Include="..\Fiap.FCG.Game.Application\Fiap.FCG.Game.Application.csproj" />
+		<ProjectReference Include="..\Fiap.FCG.Game.Domain\Fiap.FCG.Game.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>

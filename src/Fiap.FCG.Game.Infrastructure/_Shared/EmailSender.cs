@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Fiap.FCG.Game.Application.Notificacoes.Enviar;
 using Microsoft.Extensions.Configuration;
 
 namespace Fiap.FCG.Game.Infrastructure._Shared;
@@ -29,9 +30,4 @@ public class EmailSender : IEmailSender
         var mensagem = new MailMessage(remetente, destino, assunto, corpo);
         await smtpClient.SendMailAsync(mensagem);
     }
-}
-
-public interface IEmailSender
-{
-    Task EnviarAsync(string destino, string assunto, string corpo);
 }
