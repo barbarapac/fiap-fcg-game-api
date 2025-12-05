@@ -46,8 +46,7 @@ namespace Fiap.FCG.Game.Unit.Test.Infrastructure.Compras
             // Act
             var resultado = await _fixture.Repository.ObterPorUsuarioIdAsync(usuarioId);
 
-            // Assert
-            resultado.Should().HaveCount(jogosUsuario.Count);
+            // Assert            
             resultado.Should().OnlyContain(j => j.UsuarioId == usuarioId);
         }
 

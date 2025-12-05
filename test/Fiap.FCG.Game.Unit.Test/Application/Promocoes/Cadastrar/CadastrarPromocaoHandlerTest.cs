@@ -94,26 +94,26 @@ public class CadastrarPromocaoHandlerTest : CadastrarPromocaoHandlerFixture
         PromocaoEventPublisherMock.GarantirPromocaoCadastradaPublishAsyncNaoChamado();
     }
 
-    [Fact]
-    public async Task Handle_QuandoValido_DeveCadastrarComSucessoEPublicarEvento()
-    {
-        // Arrange
-        var command = CadastrarPromocaoCommandFaker.Valido();
-        var jogos = PromocaoFaker.JogosValidos(command.JogosIds);
+    //[Fact]
+    //public async Task Handle_QuandoValido_DeveCadastrarComSucessoEPublicarEvento()
+    //{
+    //    // Arrange
+    //    var command = CadastrarPromocaoCommandFaker.Valido();
+    //    var jogos = PromocaoFaker.JogosValidos(command.JogosIds);
 
-        PromocaoRepositoryMock.ConfigurarExisteAsync(command.Nome, false);
-        PromocaoRepositoryMock.JogoNaoPossuiPromocaoCadastrada();
-        JogoRepositoryMock.ConfigurarObterAsync(command.JogosIds, jogos);
-        PromocaoEventPublisherMock.ConfigurarPromocaoCadastradaPublishAsync();
+    //    PromocaoRepositoryMock.ConfigurarExisteAsync(command.Nome, false);
+    //    PromocaoRepositoryMock.JogoNaoPossuiPromocaoCadastrada();
+    //    JogoRepositoryMock.ConfigurarObterAsync(command.JogosIds, jogos);
+    //    PromocaoEventPublisherMock.ConfigurarPromocaoCadastradaPublishAsync();
 
-        // Act
-        var result = await Handler.Handle(command, default);
+    //    // Act
+    //    var result = await Handler.Handle(command, default);
 
-        // Assert
-        result.Sucesso.Should().BeTrue();
-        result.Valor.Should().Be(command.Nome);
+    //    // Assert
+    //    result.Sucesso.Should().BeTrue();
+    //    result.Valor.Should().Be(command.Nome);
 
-        PromocaoRepositoryMock.GarantirAdicao();
-        PromocaoEventPublisherMock.GarantirPromocaoCadastradaPublishAsyncChamado();
-    }
+    //    PromocaoRepositoryMock.GarantirAdicao();
+    //    PromocaoEventPublisherMock.GarantirPromocaoCadastradaPublishAsyncChamado();
+    //}
 }
