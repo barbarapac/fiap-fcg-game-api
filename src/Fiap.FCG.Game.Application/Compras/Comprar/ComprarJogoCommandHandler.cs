@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Fiap.FCG.Game.Application._Shared;
 
 namespace Fiap.FCG.Game.Application.Compras.Comprar
 {
@@ -17,20 +16,17 @@ namespace Fiap.FCG.Game.Application.Compras.Comprar
         private readonly IPromocaoRepository _promocaoRepository;
         private readonly ICompraRepository _compraRepository;
         private readonly IBibliotecaRepository _bibliotecaRepository;
-        private readonly IPagamentoIntegrationService _pagamentoService;
 
         public ComprarJogoCommandHandler(
             IJogoRepository jogoRepository,
             IPromocaoRepository promocaoRepository,
             ICompraRepository compraRepository,
-            IBibliotecaRepository bibliotecaRepository,
-            IPagamentoIntegrationService pagamentoService)
+            IBibliotecaRepository bibliotecaRepository)
         {
             _jogoRepository = jogoRepository;
             _promocaoRepository = promocaoRepository;
             _compraRepository = compraRepository;
             _bibliotecaRepository = bibliotecaRepository;
-            _pagamentoService = pagamentoService;
         }
 
         public async Task<Result<bool>> Handle(ComprarJogoCommand request, CancellationToken cancellationToken)
