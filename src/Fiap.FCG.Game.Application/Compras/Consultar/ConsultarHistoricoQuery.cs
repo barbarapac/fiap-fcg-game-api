@@ -3,11 +3,11 @@ using MediatR;
 
 namespace Fiap.FCG.Game.Application.Compras.Consultar
 {
-    public class ConsultarHistoricoComprasQuery : IRequest<Result<HistoricoCompraResponse>>
+    public class ConsultarHistoricoQuery : IRequest<Result<HistoricoCompraResponse>>
     {
         public int UsuarioId { get; }
 
-        public ConsultarHistoricoComprasQuery(int usuarioId)
+        public ConsultarHistoricoQuery(int usuarioId)
         {
             UsuarioId = usuarioId;
         }

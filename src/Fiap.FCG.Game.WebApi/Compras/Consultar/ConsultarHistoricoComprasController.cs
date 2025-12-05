@@ -11,11 +11,11 @@ namespace Fiap.FCG.Game.WebApi.Compras.Consultar
     [ApiController]
     [Route("api/usuarios")]
     [ApiExplorerSettings(GroupName = "Usuário")]
-    public class ObterHistoricoComprasController : ControllerBase
+    public class ConsultarHistoricoComprasController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public ObterHistoricoComprasController(IMediator mediator)
+        public ConsultarHistoricoComprasController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -30,7 +30,7 @@ namespace Fiap.FCG.Game.WebApi.Compras.Consultar
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ObterHistorico(int usuarioId)
         {
-            var result = await _mediator.Send(new ConsultarHistoricoComprasQuery(usuarioId));
+            var result = await _mediator.Send(new ConsultarHistoricoQuery(usuarioId));
 
             if (!result.Sucesso || result.Valor is null)
                 return NotFound(new { sucesso = false, mensagem = "Nenhuma compra encontrada para o usuário." });

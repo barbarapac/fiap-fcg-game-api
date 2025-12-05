@@ -6,12 +6,12 @@ namespace Fiap.FCG.Game.Unit.Test.WebApi.Compras.Consultar.Fixtures
     public class ObterHistoricoComprasControllerFixture
     {
         protected readonly MediatorMockBuilder MediatorMock;
-        protected readonly ObterHistoricoComprasController Controller;
+        protected readonly ConsultarHistoricoComprasController Controller;
 
         public ObterHistoricoComprasControllerFixture()
         {
             MediatorMock = new MediatorMockBuilder();
-            Controller = new ObterHistoricoComprasController(MediatorMock.Object);
+            Controller = new ConsultarHistoricoComprasController(MediatorMock.Object);
         }
     }
 }

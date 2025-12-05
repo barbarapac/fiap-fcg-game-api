@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Fiap.FCG.Game.Application.Compras.Consultar
 {
-    public class ConsultarHistoricoHandler : IRequestHandler<ConsultarHistoricoComprasQuery, Result<HistoricoCompraResponse>>
+    public class ConsultarHistoricoHandler : IRequestHandler<ConsultarHistoricoQuery, Result<HistoricoCompraResponse>>
     {
         private readonly ICompraRepository _repository;
 
@@ -17,7 +17,7 @@ namespace Fiap.FCG.Game.Application.Compras.Consultar
             _repository = repository;
         }
 
-        public async Task<Result<HistoricoCompraResponse>> Handle(ConsultarHistoricoComprasQuery request, CancellationToken cancellationToken)
+        public async Task<Result<HistoricoCompraResponse>> Handle(ConsultarHistoricoQuery request, CancellationToken cancellationToken)
         {
             var compras = await _repository.ObterPorUsuarioAsync(request.UsuarioId);
 
