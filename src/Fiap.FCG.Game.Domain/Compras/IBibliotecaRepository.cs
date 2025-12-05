@@ -6,7 +6,7 @@ namespace Fiap.FCG.Game.Domain.Compras
     public interface IBibliotecaRepository
     {
         Task AdicionarAsync(BibliotecaJogo jogo);
-        Task<List<BibliotecaJogo>> ObterBibliotecaAsync(int usuarioId);
+        Task<List<BibliotecaJogo>> ObterPorUsuarioIdAsync(int usuarioId);
         Task<bool> UsuarioJaPossuiJogoAsync(int usuarioId, int jogoId);
     }
 }

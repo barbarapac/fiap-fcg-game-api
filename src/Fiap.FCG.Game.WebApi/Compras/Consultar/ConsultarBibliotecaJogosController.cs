@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Fiap.FCG.Game.WebApi.Compras.Consultar
@@ -32,13 +33,13 @@ namespace Fiap.FCG.Game.WebApi.Compras.Consultar
         {
             var result = await _mediator.Send(new ConsultarBibliotecaQuery(usuarioId));
 
-            if (result == null || result.Count == 0)
+            if (!result.Sucesso || result.Valor == null || !result.Valor.Any())
                 return NotFound(new { sucesso = false, mensagem = "Nenhum jogo encontrado para o usuário." });
 
             return Ok(new
             {
                 sucesso = true,
-                jogos = result
+                jogos = result.Valor
             });
         }
     }

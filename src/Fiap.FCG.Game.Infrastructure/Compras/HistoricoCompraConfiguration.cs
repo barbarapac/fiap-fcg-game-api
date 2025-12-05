@@ -13,15 +13,16 @@ namespace Fiap.FCG.Game.Infrastructure.Compras
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.UsuarioId)
-                   .IsRequired();
+                .IsRequired();
 
             builder.Property(x => x.DataCompra)
-                   .IsRequired();
+                .IsRequired();
 
-            builder.HasMany(x => x.Itens)
-                   .WithOne()
-                   .HasForeignKey(x => x.HistoricoCompraId)
-                   .OnDelete(DeleteBehavior.Cascade);
+            builder
+                .HasMany(x => x.Itens)
+                .WithOne(i => i.HistoricoCompra)
+                .HasForeignKey(i => i.HistoricoCompraId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

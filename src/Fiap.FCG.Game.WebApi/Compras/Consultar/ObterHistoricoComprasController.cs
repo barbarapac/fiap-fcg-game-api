@@ -32,13 +32,13 @@ namespace Fiap.FCG.Game.WebApi.Compras.Consultar
         {
             var result = await _mediator.Send(new ConsultarHistoricoComprasQuery(usuarioId));
 
-            if (result is null || result.Count == 0)
+            if (!result.Sucesso || result.Valor is null)
                 return NotFound(new { sucesso = false, mensagem = "Nenhuma compra encontrada para o usuário." });
 
             return Ok(new
             {
                 sucesso = true,
-                compras = result
+                compras = result.Valor
             });
         }
     }

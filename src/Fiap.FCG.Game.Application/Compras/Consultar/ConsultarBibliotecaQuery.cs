@@ -1,8 +1,16 @@
-﻿using Fiap.FCG.Game.Domain.Compras;
+﻿using Fiap.FCG.Game.Domain._Shared;
 using MediatR;
 using System.Collections.Generic;
 
 namespace Fiap.FCG.Game.Application.Compras.Consultar
 {
-    public record ConsultarBibliotecaQuery(int UsuarioId) : IRequest<List<BibliotecaJogo>>;
+    public class ConsultarBibliotecaQuery : IRequest<Result<List<JogoAdquiridoResponse>>>
+    {
+        public int UsuarioId { get; }
+
+        public ConsultarBibliotecaQuery(int usuarioId)
+        {
+            UsuarioId = usuarioId;
+        }
+    }
 }

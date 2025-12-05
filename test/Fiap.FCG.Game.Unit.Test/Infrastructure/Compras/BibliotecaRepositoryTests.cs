@@ -44,7 +44,7 @@ namespace Fiap.FCG.Game.Unit.Test.Infrastructure.Compras
             await _fixture.Context.SaveChangesAsync();
 
             // Act
-            var resultado = await _fixture.Repository.ObterBibliotecaAsync(usuarioId);
+            var resultado = await _fixture.Repository.ObterPorUsuarioIdAsync(usuarioId);
 
             // Assert
             resultado.Should().HaveCount(jogosUsuario.Count);

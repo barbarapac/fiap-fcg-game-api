@@ -26,6 +26,7 @@ namespace Fiap.FCG.Game.Infrastructure.Compras
         {
             return await _context.HistoricoCompras
                 .Include(x => x.Itens)
+                .ThenInclude(x => x.Jogo)
                 .Where(x => x.UsuarioId == usuarioId)
                 .OrderByDescending(x => x.DataCompra)
                 .ToListAsync();

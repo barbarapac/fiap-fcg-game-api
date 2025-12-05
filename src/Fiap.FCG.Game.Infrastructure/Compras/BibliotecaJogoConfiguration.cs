@@ -21,6 +21,10 @@ namespace Fiap.FCG.Game.Infrastructure.Compras
             builder.Property(x => x.DataAquisicao)
                 .IsRequired();
 
+            builder.HasOne(x => x.Jogo)
+                .WithMany()
+                .HasForeignKey(x => x.JogoId);
+
             builder.HasIndex(x => new { x.UsuarioId, x.JogoId })
                 .IsUnique();
         }

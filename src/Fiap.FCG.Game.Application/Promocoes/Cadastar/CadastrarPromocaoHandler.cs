@@ -60,7 +60,7 @@ public class CadastrarPromocaoHandler : IRequestHandler<CadastrarPromocaoCommand
         
         await _promocaoRepository.AdicionarAsync(result.Valor);
 
-        await _publisher.PromocaoCadastradaPublishAsync(result.Valor);
+        //await _publisher.PromocaoCadastradaPublishAsync(result.Valor);
         
         return Result.Success(result.Valor.Nome);
     }

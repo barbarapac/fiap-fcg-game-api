@@ -18,6 +18,16 @@ namespace Fiap.FCG.Game.Infrastructure.Compras
             builder.Property(x => x.PrecoPago)
                    .HasColumnType("decimal(18,2)")
                    .IsRequired();
+            
+            builder.HasOne(ic => ic.HistoricoCompra)
+                   .WithMany(h => h.Itens)
+                   .HasForeignKey(ic => ic.HistoricoCompraId)
+                   .OnDelete(DeleteBehavior.Cascade);
+            
+            builder.HasOne(ic => ic.Jogo)
+                   .WithMany()
+                   .HasForeignKey(ic => ic.JogoId)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

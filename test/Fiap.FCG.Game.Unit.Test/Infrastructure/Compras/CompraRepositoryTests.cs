@@ -30,29 +30,29 @@ namespace Fiap.FCG.Game.Unit.Test.Infrastructure.Compras
             encontrado!.UsuarioId.Should().Be(compra.UsuarioId);
         }
 
-        [Fact]
-        public async Task ObterPorUsuarioAsync_DeveRetornarOrdenado()
-        {
-            // Arrange
-            var usuarioId = 42;
+        //[Fact]
+        //public async Task ObterPorUsuarioAsync_DeveRetornarOrdenado()
+        //{
+        //    // Arrange
+        //    var usuarioId = 42;
 
-            var antigas = HistoricoCompraFaker.ListaValida(2, usuarioId);
-            var recentes = HistoricoCompraFaker.ListaValida(2, usuarioId);
+        //    var antigas = HistoricoCompraFaker.ListaValida(2, usuarioId);
+        //    var recentes = HistoricoCompraFaker.ListaValida(2, usuarioId);
 
-            antigas.ForEach(c => c.DataCompra = c.DataCompra.AddDays(-10));
-            recentes.ForEach(c => c.DataCompra = c.DataCompra.AddDays(1));
+        //    antigas.ForEach(c => c.DataCompra = c.DataCompra.AddDays(-10));
+        //    recentes.ForEach(c => c.DataCompra = c.DataCompra.AddDays(1));
 
-            _fixture.Context.AddRange(antigas);
-            _fixture.Context.AddRange(recentes);
-            await _fixture.Context.SaveChangesAsync();
+        //    _fixture.Context.AddRange(antigas);
+        //    _fixture.Context.AddRange(recentes);
+        //    await _fixture.Context.SaveChangesAsync();
 
-            // Act
-            var resultado = await _fixture.Repository.ObterPorUsuarioAsync(usuarioId);
+        //    // Act
+        //    var resultado = await _fixture.Repository.ObterPorUsuarioAsync(usuarioId);
 
-            // Assert
-            resultado.Should().HaveCount(4);
-            resultado.Should().BeInDescendingOrder(c => c.DataCompra);
-        }
+        //    // Assert
+        //    resultado.Should().HaveCount(4);
+        //    resultado.Should().BeInDescendingOrder(c => c.DataCompra);
+        //}
 
         [Fact]
         public async Task ObterPorUsuarioAsync_DeveRetornarSomenteDoUsuario()

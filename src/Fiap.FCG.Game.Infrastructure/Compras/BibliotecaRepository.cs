@@ -22,10 +22,11 @@ namespace Fiap.FCG.Game.Infrastructure.Compras
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<BibliotecaJogo>> ObterBibliotecaAsync(int usuarioId)
+        public async Task<List<BibliotecaJogo>> ObterPorUsuarioIdAsync(int usuarioId)
         {
-            return await _context.BibliotecaJogos
-                .Where(x => x.UsuarioId == usuarioId)
+            return await _context.Set<BibliotecaJogo>()
+                .Include(b => b.Jogo)
+                .Where(b => b.UsuarioId == usuarioId)
                 .ToListAsync();
         }
 

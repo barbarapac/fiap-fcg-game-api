@@ -1,4 +1,5 @@
 ﻿using Fiap.FCG.Game.Domain._Shared;
+using Fiap.FCG.Game.Domain.Jogos;
 using System;
 
 namespace Fiap.FCG.Game.Domain.Compras
@@ -7,7 +8,10 @@ namespace Fiap.FCG.Game.Domain.Compras
     {
         public int UsuarioId { get; private set; }
         public int JogoId { get; private set; }
+        public Jogo Jogo { get; private set; }
         public DateTime DataAquisicao { get; private set; } = DateTime.UtcNow;
+
+        private BibliotecaJogo() { }
 
         public BibliotecaJogo(int usuarioId, int jogoId)
         {
