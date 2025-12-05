@@ -23,10 +23,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="WebApi\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\src\Fiap.FCG.Game.Application\Fiap.FCG.Game.Application.csproj" />
       <ProjectReference Include="..\..\src\Fiap.FCG.Game.Domain\Fiap.FCG.Game.Domain.csproj" />
       <ProjectReference Include="..\..\src\Fiap.FCG.Game.Infrastructure\Fiap.FCG.Game.Infrastructure.csproj" />

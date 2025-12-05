@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Fiap.FCG.Game.WebApi.Compras.Consultar

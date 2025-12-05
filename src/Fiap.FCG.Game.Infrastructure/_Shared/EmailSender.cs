@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Fiap.FCG.Game.Application.Notificacoes.Enviar;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Fiap.FCG.Game.Infrastructure._Shared;
 
+[ExcludeFromCodeCoverage]
 public class EmailSender : IEmailSender
 {
     private readonly IConfiguration _configuration;

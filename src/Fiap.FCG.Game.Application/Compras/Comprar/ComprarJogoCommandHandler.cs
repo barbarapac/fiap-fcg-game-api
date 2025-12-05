@@ -1,14 +1,13 @@
-﻿using Fiap.FCG.Game.Application.Integracoes;
-using Fiap.FCG.Game.Domain._Shared;
+﻿using Fiap.FCG.Game.Domain._Shared;
 using Fiap.FCG.Game.Domain.Compras;
 using Fiap.FCG.Game.Domain.Jogos;
 using Fiap.FCG.Game.Domain.Promocoes;
 using MediatR;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Fiap.FCG.Game.Application._Shared;
 
 namespace Fiap.FCG.Game.Application.Compras.Comprar
 {
@@ -18,7 +17,6 @@ namespace Fiap.FCG.Game.Application.Compras.Comprar
         private readonly IPromocaoRepository _promocaoRepository;
         private readonly ICompraRepository _compraRepository;
         private readonly IBibliotecaRepository _bibliotecaRepository;
-        private readonly IUsuarioIntegrationService _usuarioService;
         private readonly IPagamentoIntegrationService _pagamentoService;
 
         public ComprarJogoCommandHandler(
@@ -26,22 +24,17 @@ namespace Fiap.FCG.Game.Application.Compras.Comprar
             IPromocaoRepository promocaoRepository,
             ICompraRepository compraRepository,
             IBibliotecaRepository bibliotecaRepository,
-            IUsuarioIntegrationService usuarioService,
             IPagamentoIntegrationService pagamentoService)
         {
             _jogoRepository = jogoRepository;
             _promocaoRepository = promocaoRepository;
             _compraRepository = compraRepository;
             _bibliotecaRepository = bibliotecaRepository;
-            _usuarioService = usuarioService;
             _pagamentoService = pagamentoService;
         }
 
         public async Task<Result<bool>> Handle(ComprarJogoCommand request, CancellationToken cancellationToken)
         {
-            if (!await _usuarioService.UsuarioExiste(request.UsuarioId))
-                return Result.Failure<bool>("Usuário não encontrado.");
-
             var jogos = await _jogoRepository.ObterPorIdsAsync(request.JogosIds);
 
             if (jogos.Count != request.JogosIds.Count)

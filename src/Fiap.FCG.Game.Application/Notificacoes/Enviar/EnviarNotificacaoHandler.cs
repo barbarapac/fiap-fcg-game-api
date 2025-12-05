@@ -6,7 +6,6 @@ using Fiap.FCG.Game.Application.Notificacoes.Consultar;
 using Fiap.FCG.Game.Domain.Notificacoes;
 using Fiap.FCG.Game.Domain.Promocoes;
 using MediatR;
-using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Fiap.FCG.Game.Application.Notificacoes.Enviar;
 

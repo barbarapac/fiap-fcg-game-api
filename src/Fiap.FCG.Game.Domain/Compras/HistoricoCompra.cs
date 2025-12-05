@@ -7,7 +7,7 @@ namespace Fiap.FCG.Game.Domain.Compras
     public class HistoricoCompra : Base
     {
         public int UsuarioId { get; private set; }
-        public DateTime DataCompra { get; private set; } = DateTime.UtcNow;
+        public DateTime DataCompra { get; set; } = DateTime.UtcNow;
         public List<ItemCompra> Itens { get; private set; } = new();
 
         private HistoricoCompra() { }

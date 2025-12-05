@@ -1,6 +1,4 @@
-﻿using Fiap.FCG.Game.Domain._Shared;
-
-namespace Fiap.FCG.Game.Domain.Compras
+﻿namespace Fiap.FCG.Game.Domain.Compras
 {
     public class ItemCompra
     {

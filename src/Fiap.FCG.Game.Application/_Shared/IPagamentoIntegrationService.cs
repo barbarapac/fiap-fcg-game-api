@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Fiap.FCG.Game.Application.Integracoes
+namespace Fiap.FCG.Game.Application._Shared
 {
     public interface IPagamentoIntegrationService
     {
