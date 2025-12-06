@@ -1,0 +1,45 @@
+﻿using Fiap.FCG.Game.Application.Compras.Comprar;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Threading.Tasks;
+
+namespace Fiap.FCG.Game.WebApi.Compras.Comprar
+{
+    [ApiController]
+    [Route("api/jogos/compras")]
+    [ApiExplorerSettings(GroupName = "Jogos")]
+    public class ComprarJogoController : ControllerBase
+    {
+        private readonly IMediator _mediator;
+
+        public ComprarJogoController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [Authorize]
+        [HttpPost]
+        [SwaggerOperation(
+            Summary = "Realiza a compra de um ou mais jogos",
+            Description = "Permite que um usuário compre um ou mais jogos, atualizando sua biblioteca e histórico de compras."
+        )]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Comprar([FromBody] ComprarJogoCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            var response = new
+            {
+                sucesso = result.Sucesso,
+                mensagem = result.Sucesso ? "Compra realizada com sucesso." : result.Erro,
+                valor = result.Sucesso ? result.Valor : false,
+            };
+
+            return result.Sucesso ? Ok(response) : BadRequest(response);
+        }
+    }
+}

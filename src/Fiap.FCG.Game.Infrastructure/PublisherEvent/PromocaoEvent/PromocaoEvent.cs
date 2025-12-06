@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Fiap.FCG.Game.Infrastructure.PublisherEvent._Shared;
-using Fiap.FCG.Game.Infrastructure.PublisherEvent.GameEvent;
 
 namespace Fiap.FCG.Game.Infrastructure.PublisherEvent.PromocaoEvent;
 

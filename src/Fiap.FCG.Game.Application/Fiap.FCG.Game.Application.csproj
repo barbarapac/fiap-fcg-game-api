@@ -14,6 +14,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Fiap.FCG.Game.Infrastructure\Fiap.FCG.Game.Infrastructure.csproj" />
-    </ItemGroup>
+      <ProjectReference Include="..\Fiap.FCG.Game.Domain\Fiap.FCG.Game.Domain.csproj" />
+    </ItemGroup>    
 </Project>

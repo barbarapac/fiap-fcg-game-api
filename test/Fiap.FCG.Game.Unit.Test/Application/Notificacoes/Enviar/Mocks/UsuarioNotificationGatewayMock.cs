@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using Fiap.FCG.Game.Infrastructure.Usuarios;
+using Fiap.FCG.Game.Application.Notificacoes.Consultar;
 using Moq;
 
 namespace Fiap.FCG.Game.Unit.Test.Application.Notificacoes.Enviar.Mocks;

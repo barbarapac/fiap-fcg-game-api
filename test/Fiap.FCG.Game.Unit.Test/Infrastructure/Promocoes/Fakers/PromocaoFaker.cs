@@ -1,33 +1,36 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Bogus;
 using Fiap.FCG.Game.Domain.Promocoes;
 
-namespace Fiap.FCG.Game.Unit.Test.Infrastructure.Promocoes.Fakers;
-
-public static class PromocaoFaker
+namespace Fiap.FCG.Game.Unit.Test.Infrastructure.Promocoes.Fakers
 {
-    public static Promocao Valida()
+    public static class PromocaoFaker
     {
-        var result = Promocao.Criar(
-            "Black Friday",
-            "Desconto especial",
-            20,
-            DateTime.Today,
-            DateTime.Today.AddDays(7)
-        );
+        private static readonly Faker Faker = new("pt_BR");
 
-        return result.Valor;
-    }
+        public static Promocao Valida(bool ativa = true)
+        {
+            var inicio = ativa ? DateTime.UtcNow.AddDays(-2) : DateTime.UtcNow.AddDays(-10);
+            var fim = ativa ? DateTime.UtcNow.AddDays(5) : DateTime.UtcNow.AddDays(-1);
 
-    public static Promocao ComNome(string nome)
-    {
-        var result = Promocao.Criar(
-            nome,
-            "Desc",
-            10,
-            DateTime.Today,
-            DateTime.Today.AddDays(1)
-        );
+            var result = Promocao.Criar(
+                Faker.Commerce.ProductName() + Guid.NewGuid(),
+                Faker.Commerce.ProductDescription(),
+                Faker.Random.Decimal(5, 50),
+                inicio,
+                fim
+            );
 
-        return result.Valor;
+            return result.Valor!;
+        }
+
+        public static List<Promocao> ListaValida(int quantidade = 3, bool ativas = true)
+        {
+            return Enumerable.Range(1, quantidade)
+                .Select(_ => Valida(ativas))
+                .ToList();
+        }
     }
 }

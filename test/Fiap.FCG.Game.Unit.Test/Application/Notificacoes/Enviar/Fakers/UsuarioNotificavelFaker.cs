@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Bogus;
-using Fiap.FCG.Game.Infrastructure.Usuarios;
+using Fiap.FCG.Game.Application.Notificacoes.Consultar;
 
 namespace Fiap.FCG.Game.Unit.Test.Application.Notificacoes.Enviar.Fakers;
 

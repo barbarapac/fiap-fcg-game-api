@@ -1,10 +1,13 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
+﻿using Fiap.FCG.Game.Application.Eventos.GameEvent;
+using Fiap.FCG.Game.Application.Eventos.PromocaoEvent;
+using Fiap.FCG.Game.Application.Notificacoes.Consultar;
+using Fiap.FCG.Game.Application.Notificacoes.Enviar;
+using Fiap.FCG.Game.Domain.Compras;
 using Fiap.FCG.Game.Domain.Jogos;
 using Fiap.FCG.Game.Domain.Notificacoes;
 using Fiap.FCG.Game.Domain.Promocoes;
 using Fiap.FCG.Game.Infrastructure._Shared;
+using Fiap.FCG.Game.Infrastructure.Compras;
 using Fiap.FCG.Game.Infrastructure.Jogos;
 using Fiap.FCG.Game.Infrastructure.Notificacoes;
 using Fiap.FCG.Game.Infrastructure.Promocoes;
@@ -15,6 +18,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace Fiap.FCG.Game.Infrastructure;
 
@@ -81,5 +87,8 @@ public static class Module
         services.AddScoped<IJogoRepository, JogoRepository>();
         services.AddScoped<IPromocaoRepository, PromocaoRepository>();
         services.AddScoped<INotificacaoRepository, NotificacaoRepository>();
+        services.AddScoped<ICompraRepository, CompraRepository>();
+        services.AddScoped<IHistoricoCompraRepository, HistoricoCompraRepository>();
+        services.AddScoped<IBibliotecaRepository, BibliotecaRepository>();
     }
 }

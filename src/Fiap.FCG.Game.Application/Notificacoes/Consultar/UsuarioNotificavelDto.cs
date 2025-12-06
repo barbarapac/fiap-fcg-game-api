@@ -1,4 +1,4 @@
-﻿namespace Fiap.FCG.Game.Infrastructure.Usuarios;
+﻿namespace Fiap.FCG.Game.Application.Notificacoes.Consultar;
 
 public class UsuarioNotificavelDto
 {

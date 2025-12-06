@@ -5,7 +5,7 @@ namespace Fiap.FCG.Game.Domain.Promocoes;
 
 public class PromocaoJogo  : Base
 {
-    public int PromocaoId { get; private set; }
+    public int PromocaoId { get; set; }
     public int JogoId { get; private set; }
     public Promocao Promocao { get; private set; }
     public Jogo Jogo { get; set; }

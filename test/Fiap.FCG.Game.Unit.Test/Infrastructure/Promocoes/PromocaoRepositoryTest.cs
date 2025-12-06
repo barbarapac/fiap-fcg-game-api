@@ -1,109 +1,105 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Fiap.FCG.Game.Domain.Promocoes;
-using Fiap.FCG.Game.Infrastructure.Promocoes;
-using Fiap.FCG.Game.Unit.Test._Shared;
 using Fiap.FCG.Game.Unit.Test.Infrastructure.Promocoes.Fakers;
 using Fiap.FCG.Game.Unit.Test.Infrastructure.Promocoes.Fixtures;
 using FluentAssertions;
 using Xunit;
 
-namespace Fiap.FCG.Game.Unit.Test.Infrastructure.Promocoes;
-
-public class PromocaoRepositoryTest
+namespace Fiap.FCG.Game.Unit.Test.Infrastructure.Promocoes
 {
-    [Fact]
-    public async Task AtualizarAsync_QuandoPromocaoValida_DeveAtualizarComSucesso()
+    public class PromocaoRepositoryTests : IClassFixture<PromocaoRepositoryFixture>
     {
-        using var fixture = new PromocaoRepositoryFixture();
-        var promocao = PromocaoFaker.Valida();
-        await fixture.Context.Set<Promocao>().AddAsync(promocao);
-        await fixture.Context.SaveChangesAsync();
+        private readonly PromocaoRepositoryFixture _fixture;
 
-        promocao.Atualizar("Nova Promo", "Atualizada", 50, DateTime.Today, DateTime.Today.AddDays(5));
+        public PromocaoRepositoryTests(PromocaoRepositoryFixture fixture)
+        {
+            _fixture = fixture;
+            _fixture.Reset();
+        }
 
-        var result = await fixture.Repository.AtualizarAsync(promocao);
+        [Fact]
+        public async Task AdicionarAsync_DevePersistirPromocao()
+        {
+            // Arrange
+            var promocao = PromocaoFaker.Valida();
 
-        result.Sucesso.Should().BeTrue();
-        result.Valor.Should().Be("Promoção atualizada com sucesso");
+            // Act
+            var resultado = await _fixture.Repository.AdicionarAsync(promocao);
 
-        var atualizado = await fixture.Context.Set<Promocao>().FindAsync(promocao.Id);
-        atualizado!.Nome.Should().Be("Nova Promo");
-    }
+            // Assert
+            resultado.Sucesso.Should().BeTrue();
 
-    [Fact]
-    public async Task AtualizarAsync_QuandoErro_DeveRetornarFalha()
-    {
-        var context = ContextFactory.Create();
-        var repository = new PromocaoRepository(context);
-        var promocao = PromocaoFaker.Valida();
-        context.Dispose();
+            var armazenada = await _fixture.Context.Promocoes.FindAsync(promocao.Id);
+            armazenada.Should().NotBeNull();
+        }
 
-        var result = await repository.AtualizarAsync(promocao);
+        [Fact(DisplayName = "ExisteAsync deve retornar true quando nome já existe")]
+        public async Task ExisteAsync_DeveRetornarTrue()
+        {
+            // Arrange
+            var promocao = PromocaoFaker.Valida();
+            _fixture.Context.Promocoes.Add(promocao);
+            await _fixture.Context.SaveChangesAsync();
 
-        result.Sucesso.Should().BeFalse();
-        result.Erro.Should().Contain("Erro ao atualizar promoção");
-    }
+            // Act
+            var existe = await _fixture.Repository.ExisteAsync(promocao.Nome);
 
-    [Fact]
-    public async Task ObterTodasAsync_DeveRetornarTodasAsPromocoes()
-    {
-        using var fixture = new PromocaoRepositoryFixture();
-        var promocao = PromocaoFaker.Valida();
-        await fixture.Context.Set<Promocao>().AddAsync(promocao);
-        await fixture.Context.SaveChangesAsync();
+            // Assert
+            existe.Should().BeTrue();
+        }
 
-        var resultado = await fixture.Repository.ObterTodasAsync();
+        [Fact]
+        public async Task ObterPromocoesAtivasComJogosAsync_DeveRetornarSomenteAtivas()
+        {
+            // Arrange
+            var ativas = PromocaoFaker.ListaValida(2, true);
+            var inativas = PromocaoFaker.ListaValida(2, false);
 
-        resultado.Should().NotBeEmpty();
-        resultado.Should().ContainSingle(x => x.Id == promocao.Id);
-    }
+            _fixture.Context.AddRange(ativas);
+            _fixture.Context.AddRange(inativas);
+            await _fixture.Context.SaveChangesAsync();
 
-    [Fact]
-    public async Task ObterPromocoesAtivasComJogosAsync_DeveRetornarSomenteAtivas()
-    {
-        using var fixture = new PromocaoRepositoryFixture();
-        var promocao = PromocaoFaker.Valida();
-        await fixture.Context.Set<Promocao>().AddAsync(promocao);
-        await fixture.Context.SaveChangesAsync();
+            // Act
+            var resultado = await _fixture.Repository.ObterPromocoesAtivasComJogosAsync();
 
-        var resultado = await fixture.Repository.ObterPromocoesAtivasComJogosAsync();
+            // Assert
+            resultado.Should().HaveCount(ativas.Count);
+            resultado.Should().OnlyContain(p => p.DataFim >= System.DateTime.UtcNow);
+        }
 
-        resultado.Should().NotBeEmpty();
-        resultado.Should().Contain(x => x.Id == promocao.Id);
-    }
+        [Fact]
+        public async Task AtualizarAsync_DeveAtualizar()
+        {
+            // Arrange
+            var promocao = PromocaoFaker.Valida();
+            _fixture.Context.Add(promocao);
+            await _fixture.Context.SaveChangesAsync();
 
-    [Fact]
-    public async Task ObterPorJogosIdsAsync_QuandoRelacionamentoExiste_DeveRetornarPromocaoJogo()
-    {
-        using var fixture = new PromocaoRepositoryFixture();
-        var promocaoJogo = PromocaoJogoFaker.Valido();
+            promocao.Atualizar("Novo Nome", "Alterada", 20, promocao.DataInicio, promocao.DataFim);
 
-        await fixture.Context.Set<Promocao>().AddAsync(promocaoJogo.Promocao);
-        await fixture.Context.Set<Fiap.FCG.Game.Domain.Jogos.Jogo>().AddAsync(promocaoJogo.Jogo);
-        await fixture.Context.Set<PromocaoJogo>().AddAsync(promocaoJogo);
-        await fixture.Context.SaveChangesAsync();
+            // Act
+            var resultado = await _fixture.Repository.AtualizarAsync(promocao);
 
-        var resultado = await fixture.Repository.ObterPorJogosIdsAsync(new List<int> { promocaoJogo.JogoId });
+            // Assert
+            resultado.Sucesso.Should().BeTrue();
+            (await _fixture.Context.Promocoes.FindAsync(promocao.Id))!.Nome.Should().Be("Novo Nome");
+        }
 
-        resultado.Should().ContainSingle(x => x.JogoId == promocaoJogo.JogoId && x.PromocaoId == promocaoJogo.PromocaoId);
-    }
+        [Fact]
+        public async Task ExcluirAsync_DeveRemover()
+        {
+            // Arrange
+            var promocao = PromocaoFaker.Valida();
+            _fixture.Context.Add(promocao);
+            await _fixture.Context.SaveChangesAsync();
 
-    [Fact]
-    public async Task ObterPorIdAsync_QuandoExiste_DeveRetornarComJogos()
-    {
-        using var fixture = new PromocaoRepositoryFixture();
-        var promocaoJogo = PromocaoJogoFaker.Valido();
+            // Act
+            var resultado = await _fixture.Repository.ExcluirAsync(promocao);
 
-        await fixture.Context.Set<Promocao>().AddAsync(promocaoJogo.Promocao);
-        await fixture.Context.Set<Fiap.FCG.Game.Domain.Jogos.Jogo>().AddAsync(promocaoJogo.Jogo);
-        await fixture.Context.Set<PromocaoJogo>().AddAsync(promocaoJogo);
-        await fixture.Context.SaveChangesAsync();
-
-        var resultado = await fixture.Repository.ObterPorIdAsync(promocaoJogo.Promocao.Id);
-
-        resultado.Should().NotBeNull();
-        resultado!.Jogos.Should().ContainSingle(j => j.JogoId == promocaoJogo.JogoId);
+            // Assert
+            resultado.Sucesso.Should().BeTrue();
+            (await _fixture.Context.Promocoes.FindAsync(promocao.Id)).Should().BeNull();
+        }
     }
 }

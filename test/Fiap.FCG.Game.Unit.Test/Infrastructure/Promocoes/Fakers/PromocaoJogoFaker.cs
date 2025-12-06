@@ -1,24 +1,21 @@
-﻿using Fiap.FCG.Game.Domain.Jogos;
+﻿using Bogus;
 using Fiap.FCG.Game.Domain.Promocoes;
+using Fiap.FCG.Game.Unit.Test.Infrastructure.Jogos.Fakers;
 
 namespace Fiap.FCG.Game.Unit.Test.Infrastructure.Promocoes.Fakers
 {
     public static class PromocaoJogoFaker
     {
-        public static PromocaoJogo Valido()
-        {
-            var promocao = PromocaoFaker.Valida();
-            var jogo = new Jogo("Jogo Faker", 59.90m);
-            var relacao = new PromocaoJogo(jogo.Id, promocao);
-            relacao.AdicionarJogo(jogo);
-            return relacao;
-        }
+        private static readonly Faker Faker = new("pt_BR");
 
-        public static PromocaoJogo Com(Promocao promocao, Jogo jogo)
+        public static PromocaoJogo Valido(Promocao promocao)
         {
-            var relacao = new PromocaoJogo(jogo.Id, promocao);
-            relacao.AdicionarJogo(jogo);
-            return relacao;
+            var jogo = JogoFaker.Valido("Jogo Promo");
+
+            var pj = new PromocaoJogo(jogo.Id, promocao);
+            pj.AdicionarJogo(jogo);
+
+            return pj;
         }
     }
 }

@@ -5,7 +5,17 @@ option csharp_namespace = "Fiap.FCG.User.WebApi.Protos";
 package usuario;
 
 service UsuarioService {
+  rpc ObterUsuarioPorId (ObterUsuarioPorIdRequest) returns (ObterUsuarioPorIdResponse);
   rpc ObterUsuariosComNotificacoes (ObterUsuariosComNotificacoesRequest) returns (ObterUsuariosComNotificacoesResponse);
+}
+
+message ObterUsuarioPorIdRequest {
+  int32 usuarioId = 1;
+}
+
+message ObterUsuarioPorIdResponse {
+  bool existe = 1;
+  UsuarioDto usuario = 2;
 }
 
 message ObterUsuariosComNotificacoesRequest {

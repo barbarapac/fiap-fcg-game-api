@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Fiap.FCG.Game.Infrastructure.Usuarios;
+using Fiap.FCG.Game.Application.Notificacoes.Consultar;
 using Fiap.FCG.Game.Unit.Test.Infrastructure.Usuarios.Fakers;
 using Fiap.FCG.Game.Unit.Test.Infrastructure.Usuarios.Fixtures;
 using FluentAssertions;
