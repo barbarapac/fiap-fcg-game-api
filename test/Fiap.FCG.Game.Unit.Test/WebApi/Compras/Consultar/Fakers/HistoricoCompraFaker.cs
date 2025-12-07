@@ -9,15 +9,21 @@ namespace Fiap.FCG.Game.Unit.Test.WebApi.Compras.Consultar.Fakers
     {
         private static readonly Faker Faker = new("pt_BR");
 
-        public static HistoricoCompra Gerar() =>
-            new HistoricoCompra(
-                Faker.Random.Int(1, 999),
-                Enumerable.Range(1, Faker.Random.Int(1, 5))
-                    .Select(_ => ItemCompraFaker.Gerar())
-                    .ToList()
-            );
+        public static HistoricoCompra Gerar(int? usuarioId = null)
+        {
+            var itens = Enumerable.Range(1, Faker.Random.Int(1, 5))
+                .Select(_ => ItemCompraFaker.Gerar())
+                .ToList();
 
-        public static List<HistoricoCompra> GerarLista(int quantidade) =>
-            Enumerable.Range(1, quantidade).Select(_ => Gerar()).ToList();
+            return new HistoricoCompra(
+                usuarioId ?? Faker.Random.Int(1, 999),
+                itens
+            );
+        }
+
+        public static List<HistoricoCompra> GerarLista(int quantidade, int? usuarioId = null) =>
+            Enumerable.Range(1, quantidade)
+                .Select(_ => Gerar(usuarioId))
+                .ToList();
     }
 }

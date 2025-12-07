@@ -75,5 +75,15 @@ namespace Fiap.FCG.Game.Unit.Test.WebApi.Compras.Consultar.Mocks
                     It.IsAny<CancellationToken>()),
                 Times.Never);
         }
+
+        public void VerifyCalled<TRequest, TResponse>(Func<TRequest, bool> predicate)
+            where TRequest : class, IRequest<TResponse>
+        {
+            _mock.Verify(m => m.Send(
+                It.Is<TRequest>(r => predicate(r)),
+                It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
     }
 }
