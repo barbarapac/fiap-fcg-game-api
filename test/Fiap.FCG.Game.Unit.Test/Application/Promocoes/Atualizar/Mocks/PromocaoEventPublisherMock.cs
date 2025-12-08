@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Fiap.FCG.Game.Application.Eventos.PromocaoEvent;
 using Fiap.FCG.Game.Domain.Promocoes;
-using Fiap.FCG.Game.Infrastructure.PublisherEvent.PromocaoEvent;
 using Moq;
 
 namespace Fiap.FCG.Game.Unit.Test.Application.Promocoes.Atualizar.Mocks;

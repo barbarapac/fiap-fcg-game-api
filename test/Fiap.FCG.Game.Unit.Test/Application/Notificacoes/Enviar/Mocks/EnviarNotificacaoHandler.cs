@@ -1,4 +1,4 @@
-﻿using Fiap.FCG.Game.Infrastructure._Shared;
+﻿using Fiap.FCG.Game.Application.Notificacoes.Enviar;
 using Moq;
 
 namespace Fiap.FCG.Game.Unit.Test.Application.Notificacoes.Enviar.Mocks;

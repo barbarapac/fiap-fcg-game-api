@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Fiap.FCG.Game.Domain.Promocoes;
 
-namespace Fiap.FCG.Game.Infrastructure.PublisherEvent.PromocaoEvent;
+namespace Fiap.FCG.Game.Application.Eventos.PromocaoEvent;
 
 public interface IPromocaoEventPublisher
 {

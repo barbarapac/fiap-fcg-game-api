@@ -11,7 +11,7 @@
     <ItemGroup>
         <PackageReference Include="AutoBogus" />
         <PackageReference Include="coverlet.collector" />
-        <PackageReference Include="coverlet.msbuild"/>
+        <PackageReference Include="coverlet.msbuild" />
         <PackageReference Include="FluentAssertions" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -20,10 +20,6 @@
         <PackageReference Include="NUnit3TestAdapter" />
         <PackageReference Include="xunit" />
         <PackageReference Include="xunit.runner.visualstudio" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="WebApi\" />
     </ItemGroup>
 
     <ItemGroup>

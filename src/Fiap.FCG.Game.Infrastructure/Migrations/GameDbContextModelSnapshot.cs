@@ -22,6 +22,78 @@ namespace Fiap.FCG.Game.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Fiap.FCG.Game.Domain.Compras.BibliotecaJogo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataAquisicao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("JogoId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JogoId");
+
+                    b.HasIndex("UsuarioId", "JogoId")
+                        .IsUnique();
+
+                    b.ToTable("BibliotecaJogos", (string)null);
+                });
+
+            modelBuilder.Entity("Fiap.FCG.Game.Domain.Compras.HistoricoCompra", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataCompra")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HistoricoCompras", (string)null);
+                });
+
+            modelBuilder.Entity("Fiap.FCG.Game.Domain.Compras.ItemCompra", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("HistoricoCompraId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("JogoId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("PrecoPago")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HistoricoCompraId");
+
+                    b.HasIndex("JogoId");
+
+                    b.ToTable("ItensCompra", (string)null);
+                });
+
             modelBuilder.Entity("Fiap.FCG.Game.Domain.Jogos.Jogo", b =>
                 {
                     b.Property<int>("Id")
@@ -151,6 +223,36 @@ namespace Fiap.FCG.Game.Infrastructure.Migrations
                     b.ToTable("promocao_jogo", (string)null);
                 });
 
+            modelBuilder.Entity("Fiap.FCG.Game.Domain.Compras.BibliotecaJogo", b =>
+                {
+                    b.HasOne("Fiap.FCG.Game.Domain.Jogos.Jogo", "Jogo")
+                        .WithMany()
+                        .HasForeignKey("JogoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Jogo");
+                });
+
+            modelBuilder.Entity("Fiap.FCG.Game.Domain.Compras.ItemCompra", b =>
+                {
+                    b.HasOne("Fiap.FCG.Game.Domain.Compras.HistoricoCompra", "HistoricoCompra")
+                        .WithMany("Itens")
+                        .HasForeignKey("HistoricoCompraId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Fiap.FCG.Game.Domain.Jogos.Jogo", "Jogo")
+                        .WithMany()
+                        .HasForeignKey("JogoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("HistoricoCompra");
+
+                    b.Navigation("Jogo");
+                });
+
             modelBuilder.Entity("Fiap.FCG.Game.Domain.Notificacoes.NotificacaoEnviada", b =>
                 {
                     b.HasOne("Fiap.FCG.Game.Domain.Notificacoes.Notificacao", "Notificacao")
@@ -187,6 +289,11 @@ namespace Fiap.FCG.Game.Infrastructure.Migrations
                     b.Navigation("Jogo");
 
                     b.Navigation("Promocao");
+                });
+
+            modelBuilder.Entity("Fiap.FCG.Game.Domain.Compras.HistoricoCompra", b =>
+                {
+                    b.Navigation("Itens");
                 });
 
             modelBuilder.Entity("Fiap.FCG.Game.Domain.Notificacoes.Notificacao", b =>

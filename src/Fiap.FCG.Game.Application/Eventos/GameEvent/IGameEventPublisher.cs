@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Fiap.FCG.Game.Domain.Jogos;
 
-namespace Fiap.FCG.Game.Infrastructure.PublisherEvent.GameEvent;
+namespace Fiap.FCG.Game.Application.Eventos.GameEvent;
 
 public interface IGameEventPublisher
 {
