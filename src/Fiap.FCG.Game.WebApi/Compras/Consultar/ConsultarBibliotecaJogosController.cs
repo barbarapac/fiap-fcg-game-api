@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Fiap.FCG.Game.WebApi.Compras.Consultar
 {
     [ApiController]
-    [Route("api/usuarios")]
+    [Route("api/jogos")]
     [ApiExplorerSettings(GroupName = "Usuário")]
     public class ConsultarBibliotecaJogosController : ControllerBase
     {
