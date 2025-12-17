@@ -1,6 +1,5 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Fiap.FCG.Game.Application.Eventos.ComprasEvent;
-using Fiap.FCG.Game.Domain.Compras.Eventos;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Text.Json;

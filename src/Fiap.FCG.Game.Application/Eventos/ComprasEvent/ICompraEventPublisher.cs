@@ -1,5 +1,4 @@
-﻿using Fiap.FCG.Game.Domain.Compras.Eventos;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Fiap.FCG.Game.Application.Eventos.ComprasEvent
 {
