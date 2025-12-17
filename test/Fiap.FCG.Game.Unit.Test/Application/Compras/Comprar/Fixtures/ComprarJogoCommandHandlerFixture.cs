@@ -22,7 +22,8 @@ namespace Fiap.FCG.Game.Unit.Test.Application.Compras.Comprar.Tests
                 JogoRepositoryMock.Object,
                 PromocaoRepositoryMock.Object,
                 CompraRepositoryMock.Object,
-                BibliotecaRepositoryMock.Object
+                BibliotecaRepositoryMock.Object,
+                null
             );
         }
     }
