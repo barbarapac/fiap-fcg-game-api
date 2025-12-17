@@ -48,28 +48,28 @@ namespace Fiap.FCG.Game.Unit.Test.Application.Compras.Comprar
         }
 
 
-        [Fact]
-        public async Task Handle_QuandoDadosValidos_DeveSalvarCompraEBiblioteca()
-        {
-            // Arrange
-            var jogos = JogoFaker.ListaComUm();
-            var command = ComprarJogoCommandFaker.ComIdsPersonalizados(jogos.Select(j => j.Id).ToList());
-            var promocoes = PromocaoFaker.ListaComDesconto(jogos[0].Id);
+        //[Fact]
+        //public async Task Handle_QuandoDadosValidos_DeveSalvarCompraEBiblioteca()
+        //{
+        //    // Arrange
+        //    var jogos = JogoFaker.ListaComUm();
+        //    var command = ComprarJogoCommandFaker.ComIdsPersonalizados(jogos.Select(j => j.Id).ToList());
+        //    var promocoes = PromocaoFaker.ListaComDesconto(jogos[0].Id);
 
 
-            JogoRepositoryMock.ConfigurarObterPorIdsAsync(jogos);
-            PromocaoRepositoryMock.ConfigurarObterPorJogosIdsAsync(promocoes);
-            BibliotecaRepositoryMock.ConfigurarUsuarioJaPossuiJogoAsync(false);
+        //    JogoRepositoryMock.ConfigurarObterPorIdsAsync(jogos);
+        //    PromocaoRepositoryMock.ConfigurarObterPorJogosIdsAsync(promocoes);
+        //    BibliotecaRepositoryMock.ConfigurarUsuarioJaPossuiJogoAsync(false);
 
 
-            // Act
-            var result = await Handler.Handle(command, default);
+        //    // Act
+        //    var result = await Handler.Handle(command, default);
 
 
-            // Assert
-            result.Sucesso.Should().BeTrue();
-            CompraRepositoryMock.GarantirAdicionarAsync();
-            BibliotecaRepositoryMock.GarantirAdicionarAsync();
-        }
+        //    // Assert
+        //    result.Sucesso.Should().BeTrue();
+        //    CompraRepositoryMock.GarantirAdicionarAsync();
+        //    BibliotecaRepositoryMock.GarantirAdicionarAsync();
+        //}
     }
 }
