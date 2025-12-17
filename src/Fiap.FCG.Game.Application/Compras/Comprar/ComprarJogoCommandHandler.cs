@@ -1,5 +1,7 @@
-﻿using Fiap.FCG.Game.Domain._Shared;
+﻿using Fiap.FCG.Game.Application.Eventos.ComprasEvent;
+using Fiap.FCG.Game.Domain._Shared;
 using Fiap.FCG.Game.Domain.Compras;
+using Fiap.FCG.Game.Domain.Compras.Eventos;
 using Fiap.FCG.Game.Domain.Jogos;
 using Fiap.FCG.Game.Domain.Promocoes;
 using MediatR;
@@ -16,17 +18,20 @@ namespace Fiap.FCG.Game.Application.Compras.Comprar
         private readonly IPromocaoRepository _promocaoRepository;
         private readonly ICompraRepository _compraRepository;
         private readonly IBibliotecaRepository _bibliotecaRepository;
+        private readonly ICompraEventPublisher _compraEventPublisher;
 
         public ComprarJogoCommandHandler(
             IJogoRepository jogoRepository,
             IPromocaoRepository promocaoRepository,
             ICompraRepository compraRepository,
-            IBibliotecaRepository bibliotecaRepository)
+            IBibliotecaRepository bibliotecaRepository,
+            ICompraEventPublisher compraEventPublisher)
         {
             _jogoRepository = jogoRepository;
             _promocaoRepository = promocaoRepository;
             _compraRepository = compraRepository;
             _bibliotecaRepository = bibliotecaRepository;
+            _compraEventPublisher = compraEventPublisher;
         }
 
         public async Task<Result<bool>> Handle(ComprarJogoCommand request, CancellationToken cancellationToken)
@@ -62,6 +67,19 @@ namespace Fiap.FCG.Game.Application.Compras.Comprar
             {
                 await _bibliotecaRepository.AdicionarAsync(new BibliotecaJogo(request.UsuarioId, jogo.Id));
             }
+
+            var evento = new CompraRealizadaEvent
+            {
+                UsuarioId = request.UsuarioId,
+                DataCompra = compra.DataCompra,
+                Itens = itens.Select(i => new CompraRealizadaItemEvent
+                {
+                    JogoId = i.JogoId,
+                    Valor = i.PrecoPago
+                }).ToList()
+            };
+
+            await _compraEventPublisher.PublicarCompraRealizadaAsync(evento);
 
             return Result.Success(true);
         }
