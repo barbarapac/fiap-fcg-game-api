@@ -2,16 +2,19 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Fiap.FCG.Game.Domain.Jogos;
+using Fiap.FCG.Game.Infrastructure._Shared;
 
 namespace Fiap.FCG.Game.Application.Jogos.Consultar
 {
     public class ConsultaJogoQuery : IConsultaJogoQuery
     {
         private readonly IJogoRepository _repository;
+        private readonly ElasticConnector _elastic;
 
-        public ConsultaJogoQuery(IJogoRepository repository)
+        public ConsultaJogoQuery(IJogoRepository repository, ElasticConnector elastic)
         {
             _repository = repository;
+            _elastic = elastic;
         }
 
         public async Task<List<JogoResponse>> ObterTodosAsync()
@@ -24,6 +27,82 @@ namespace Fiap.FCG.Game.Application.Jogos.Consultar
         {
             var jogo = await _repository.ObterPorIdAsync(id);
             return jogo is null ? null : Mapear(jogo);
+        }
+
+        // Buscar por Nome, Tipo e Ordenar por Preço
+        public async Task<string> ObterPorNomeOrdenadoAsync(string nome, string tipo, bool crescente)
+        {
+            var order = crescente ? "asc" : "desc";
+            var queryJson = $@"{{
+                ""query"": {{
+                    ""bool"": {{
+                        ""must"": [
+                            {{ ""match"": {{ ""Nome"": ""{nome}"" }} }}
+                        ]
+                    }}
+                }},
+                ""sort"": [{{ ""Preco"": {{ ""order"": ""{order}"" }} }}]
+            }}";
+
+            return await _elastic.SearchAsync("games", queryJson);
+        }
+
+        //Média, Mínimo e Máximo de Preço dos Jogos
+        public async Task<string> ObterMetricasPrecoAsync()
+        {
+            var queryJson = @"{
+                ""size"": 0,
+                ""aggs"": {
+                    ""preco_medio"": { ""avg"": { ""field"": ""Preco"" } },
+                    ""preco_min"": { ""min"": { ""field"": ""Preco"" } },
+                    ""preco_max"": { ""max"": { ""field"": ""Preco"" } }
+                }
+            }";
+
+            return await _elastic.SearchAsync("games", queryJson);
+        }
+
+        //Contagem de Jogos por Tipo
+        public async Task<string> ObterContagemPorTipoAsync()
+        {
+            var queryJson = @"{
+                ""size"": 0,
+                ""aggs"": {
+                    ""por_tipo"": {
+                        ""terms"": { ""field"": ""Tipo.keyword"" }
+                    }
+                }
+            }";
+
+            return await _elastic.SearchAsync("games", queryJson);
+        }
+
+        //Jogos Mais Caros/Baratos
+        public async Task<string> ObterJogosMaisCarosOuBaratosAsync(bool maisCaros, int quantidade)
+        {
+            var order = maisCaros ? "desc" : "asc";
+            var queryJson = $@"{{
+                ""size"": {quantidade},
+                ""sort"": [{{ ""Preco"": {{ ""order"": ""{order}"" }} }}]
+            }}";
+
+            return await _elastic.SearchAsync("games", queryJson);
+        }
+
+        public async Task<string> ObterPorTipoEPrecoAsync(string tipo, double precoMin, double precoMax)
+        {
+            var queryJson = $@"{{
+                ""query"": {{
+                    ""bool"": {{
+                        ""must"": [
+                            {{ ""match"": {{ ""Tipo"": ""{tipo}"" }} }},
+                            {{ ""range"": {{ ""Preco"": {{ ""gte"": {precoMin}, ""lte"": {precoMax} }} }} }}
+                        ]
+                    }}
+                }}
+            }}";
+
+            return await _elastic.SearchAsync("games", queryJson);
         }
 
         private static JogoResponse Mapear(Jogo jogo)

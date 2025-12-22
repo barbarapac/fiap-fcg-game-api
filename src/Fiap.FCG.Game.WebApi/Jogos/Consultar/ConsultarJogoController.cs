@@ -48,4 +48,70 @@ public class ConsultarJogoController : ControllerBase
         var jogos = await _consulta.ObterTodosAsync();
         return Ok(new { sucesso = true, jogos });
     }
+
+
+    [Authorize]
+    [HttpGet("ordenados")]
+    [SwaggerOperation(
+        Summary = "Lista todos os jogos ordenados",
+        Description = "Retorna todos os jogos cadastrados de forma ordenada."
+    )]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> ObterPorNomeOrdenado(string nome, string tipo, bool crescente)
+    {
+        var jogos = await _consulta.ObterPorNomeOrdenadoAsync(nome, tipo, crescente);
+        return Ok(new { sucesso = true, jogos });
+    }
+
+    [Authorize]
+    [HttpGet("metricas-preco")]
+    [SwaggerOperation(
+        Summary = "Lista o valor médio, mínimo e máximo do preço dos jogos",
+        Description = "Lista o valor médio, mínimo e máximo do preço dos jogos."
+    )]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> ObterMetricasPreco()
+    {
+        var jogos = await _consulta.ObterMetricasPrecoAsync();
+        return Ok(new { sucesso = true, jogos });
+    }
+
+    [Authorize]
+    [HttpGet("contagem-por-tipo")]
+    [SwaggerOperation(
+        Summary = "Lista a quantidade de jogos por tipo de evento",
+        Description = "Lista a quantidade de jogos por tipo de evento."
+    )]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> ObterContagemPorTipo()
+    {
+        var jogos = await _consulta.ObterContagemPorTipoAsync();
+        return Ok(new { sucesso = true, jogos });
+    }
+
+    [Authorize]
+    [HttpGet("caros-ou-baratos")]
+    [SwaggerOperation(
+        Summary = "Lista os jogos por quantidade e ordenada",
+        Description = "Lista os jogos por quantidade e ordenada (Barato ou Caro)."
+    )]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> ObterJogosMaisCarosOuBaratos(bool maisCaros, int quantidade)
+    {
+        var jogos = await _consulta.ObterJogosMaisCarosOuBaratosAsync(maisCaros, quantidade);
+        return Ok(new { sucesso = true, jogos });
+    }
+
+    [Authorize]
+    [HttpGet("por-tipo-e-preco")]
+    [SwaggerOperation(
+        Summary = "Lista os jogos por quantidade e ordenada",
+        Description = "Lista os jogos por quantidade e ordenada (Barato ou Caro)."
+    )]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> ObterPorTipoEPreco(string tipo, double precoMin, double precoMax)
+    {
+        var jogos = await _consulta.ObterPorTipoEPrecoAsync(tipo, precoMin, precoMax);
+        return Ok(new { sucesso = true, jogos });
+    }
 }

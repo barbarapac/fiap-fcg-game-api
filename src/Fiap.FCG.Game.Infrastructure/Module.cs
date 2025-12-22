@@ -46,6 +46,7 @@ public static class Module
     {
         services.AddScoped<IEmailSender, EmailSender>();
         services.AddScoped<IUsuarioNotificationGateway, UsuarioNotificationGateway>();
+        services.AddScoped<ElasticConnector>();
     }
 
     private static void AddAuthentication(IServiceCollection services, IConfiguration configuration)
