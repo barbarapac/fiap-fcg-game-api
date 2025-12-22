@@ -10,6 +10,7 @@ namespace Fiap.FCG.Game.Unit.Test.Application.Compras.Comprar.Tests
         protected PromocaoRepositoryMock PromocaoRepositoryMock { get; }
         protected CompraRepositoryMock CompraRepositoryMock { get; }
         protected BibliotecaRepositoryMock BibliotecaRepositoryMock { get; }
+        protected CompraEventPublisherMock CompraEventPublisherMock { get; }
 
         protected ComprarJogoCommandHandlerFixture()
         {
@@ -17,13 +18,14 @@ namespace Fiap.FCG.Game.Unit.Test.Application.Compras.Comprar.Tests
             PromocaoRepositoryMock = new();
             CompraRepositoryMock = new();
             BibliotecaRepositoryMock = new();
+            CompraEventPublisherMock = new();
 
             Handler = new ComprarJogoCommandHandler(
                 JogoRepositoryMock.Object,
                 PromocaoRepositoryMock.Object,
                 CompraRepositoryMock.Object,
                 BibliotecaRepositoryMock.Object,
-                null
+                CompraEventPublisherMock.Object
             );
         }
     }
