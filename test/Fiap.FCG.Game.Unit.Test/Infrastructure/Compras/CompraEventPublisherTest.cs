@@ -2,7 +2,6 @@
 using Fiap.FCG.Game.Application.Eventos.ComprasEvent;
 using Fiap.FCG.Game.Infrastructure.PublisherEvent.ComprasEvent;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using Moq;
 using Newtonsoft.Json;
 using System;
@@ -39,31 +38,22 @@ namespace Fiap.FCG.Game.Unit.Test.Infrastructure.Compras
 
             // Act
             await publisher.PublicarCompraRealizadaAsync(evento);
-            
+
             // Assert
             senderMock.Verify(
                 s => s.SendMessageAsync(It.IsAny<ServiceBusMessage>(), default),
                 Times.Once);
 
-            var deserialized =
-                capturedMessage.Body.ToObjectFromJson<CompraRealizadaEvent>();
+            // Use ToObjectFromJson to safely deserialize BinaryData
+            var deserialized = capturedMessage.Body.ToObjectFromJson<CompraRealizadaEvent>();
 
-            deserialized.CompraId.Should().Be(evento.CompraId);
+            deserialized.Should().NotBeNull();
+            deserialized!.CompraId.Should().Be(evento.CompraId);
             deserialized.UsuarioId.Should().Be(evento.UsuarioId);
             deserialized.ValorTotal.Should().Be(evento.ValorTotal);
 
         }
 
-
-        private class CompraEventPublisherTestable : CompraEventPublisher
-        {
-            public CompraEventPublisherTestable(IConfiguration config, ServiceBusSender fakeSender)
-            : base(config)
-            {
-                typeof(CompraEventPublisher)
-                .GetField("_sender", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                ?.SetValue(this, fakeSender);
-            }
-        }
+        // OBS: CompraEventPublisherTestable não é mais necessário com o construtor público que aceita o sender mock.
     }
 }
