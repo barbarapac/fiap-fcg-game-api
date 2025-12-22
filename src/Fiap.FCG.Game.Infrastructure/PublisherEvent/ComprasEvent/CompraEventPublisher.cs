@@ -21,6 +21,11 @@ namespace Fiap.FCG.Game.Infrastructure.PublisherEvent.ComprasEvent
             _sender = _client.CreateSender("compras-realizadas");
         }
 
+        public CompraEventPublisher(ServiceBusSender sender)
+        {
+            _sender = sender;
+        }
+
         public async Task PublicarCompraRealizadaAsync(CompraRealizadaEvent evento)
         {
             var json = JsonSerializer.Serialize(evento);
