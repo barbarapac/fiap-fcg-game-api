@@ -1,14 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using Fiap.FCG.Game.Domain.Jogos;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using Fiap.FCG.Game.Domain.Jogos;
 
 namespace Fiap.FCG.Game.Application.Jogos.Consultar;
 
+[ExcludeFromCodeCoverage]
 public class ConsultaJogoQuery : IConsultaJogoQuery
 {
     private readonly IJogoRepository _repository;
     private readonly IElasticConnector _elastic;
+    private const string IndexName = "games";
 
     public ConsultaJogoQuery(IJogoRepository repository, IElasticConnector elastic)
     {
@@ -43,7 +46,7 @@ public class ConsultaJogoQuery : IConsultaJogoQuery
                 ""sort"": [{{ ""Preco"": {{ ""order"": ""{order}"" }} }}]
             }}";
 
-        return await _elastic.SearchAsync("games", queryJson);
+        return await _elastic.SearchAsync(IndexName, queryJson);
     }
 
     //Média, Mínimo e Máximo de Preço dos Jogos
@@ -58,7 +61,7 @@ public class ConsultaJogoQuery : IConsultaJogoQuery
                 }
             }";
 
-        return await _elastic.SearchAsync("games", queryJson);
+        return await _elastic.SearchAsync(IndexName, queryJson);
     }
 
     //Contagem de Jogos por Tipo
@@ -73,7 +76,7 @@ public class ConsultaJogoQuery : IConsultaJogoQuery
                 }
             }";
 
-        return await _elastic.SearchAsync("games", queryJson);
+        return await _elastic.SearchAsync(IndexName, queryJson);
     }
 
     //Jogos Mais Caros/Baratos
@@ -85,7 +88,7 @@ public class ConsultaJogoQuery : IConsultaJogoQuery
                 ""sort"": [{{ ""Preco"": {{ ""order"": ""{order}"" }} }}]
             }}";
 
-        return await _elastic.SearchAsync("games", queryJson);
+        return await _elastic.SearchAsync(IndexName, queryJson);
     }
 
     public async Task<string> ObterPorTipoEPrecoAsync(string tipo, double precoMin, double precoMax)
@@ -101,7 +104,7 @@ public class ConsultaJogoQuery : IConsultaJogoQuery
                 }}
             }}";
 
-        return await _elastic.SearchAsync("games", queryJson);
+        return await _elastic.SearchAsync(IndexName, queryJson);
     }
 
     private static JogoResponse Mapear(Jogo jogo)

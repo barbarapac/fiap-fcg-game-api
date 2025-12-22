@@ -1,6 +1,7 @@
 ﻿using Fiap.FCG.Game.Application.Jogos.Consultar;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Fiap.FCG.Game.Infrastructure._Shared;
 
+[ExcludeFromCodeCoverage]
 public class ElasticConnector : IElasticConnector
 {
     private readonly string _uri;
