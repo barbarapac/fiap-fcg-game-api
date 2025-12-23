@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.Json;
+using System.Threading.Tasks;
 using Fiap.FCG.Game.Application.Jogos.Consultar;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -59,8 +60,9 @@ public class ConsultarJogoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> ObterPorNomeOrdenado(string nome, string tipo, bool crescente)
     {
-        var jogos = await _consulta.ObterPorNomeOrdenadoAsync(nome, tipo, crescente);
-        return Ok(new { sucesso = true, jogos });
+        var jogosJson = await _consulta.ObterPorNomeOrdenadoAsync(nome, tipo, crescente);
+        var jogosObj = JsonSerializer.Deserialize<object>(jogosJson);
+        return Ok(new { sucesso = true, jogos = jogosObj });
     }
 
     [Authorize]
@@ -72,8 +74,9 @@ public class ConsultarJogoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> ObterMetricasPreco()
     {
-        var jogos = await _consulta.ObterMetricasPrecoAsync();
-        return Ok(new { sucesso = true, jogos });
+        var jogosJson = await _consulta.ObterMetricasPrecoAsync();
+        var jogosObj = JsonSerializer.Deserialize<object>(jogosJson);
+        return Ok(new { sucesso = true, jogos = jogosObj });
     }
 
     [Authorize]
@@ -85,8 +88,9 @@ public class ConsultarJogoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> ObterContagemPorTipo()
     {
-        var jogos = await _consulta.ObterContagemPorTipoAsync();
-        return Ok(new { sucesso = true, jogos });
+        var jogosJson = await _consulta.ObterContagemPorTipoAsync();
+        var jogosObj = JsonSerializer.Deserialize<object>(jogosJson);
+        return Ok(new { sucesso = true, jogos = jogosObj });
     }
 
     [Authorize]
@@ -98,8 +102,9 @@ public class ConsultarJogoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> ObterJogosMaisCarosOuBaratos(bool maisCaros, int quantidade)
     {
-        var jogos = await _consulta.ObterJogosMaisCarosOuBaratosAsync(maisCaros, quantidade);
-        return Ok(new { sucesso = true, jogos });
+        var jogosJson = await _consulta.ObterJogosMaisCarosOuBaratosAsync(maisCaros, quantidade);
+        var jogosObj = JsonSerializer.Deserialize<object>(jogosJson);
+        return Ok(new { sucesso = true, jogos = jogosObj });
     }
 
     [Authorize]
@@ -111,7 +116,8 @@ public class ConsultarJogoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> ObterPorTipoEPreco(string tipo, double precoMin, double precoMax)
     {
-        var jogos = await _consulta.ObterPorTipoEPrecoAsync(tipo, precoMin, precoMax);
-        return Ok(new { sucesso = true, jogos });
+        var jogosJson = await _consulta.ObterPorTipoEPrecoAsync(tipo, precoMin, precoMax);
+        var jogosObj = JsonSerializer.Deserialize<object>(jogosJson);
+        return Ok(new { sucesso = true, jogos = jogosObj });
     }
 }
