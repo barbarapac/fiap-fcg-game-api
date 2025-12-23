@@ -1,4 +1,5 @@
-﻿using Fiap.FCG.Game.Application.Eventos.GameEvent;
+﻿using Fiap.FCG.Game.Application.Eventos.ComprasEvent;
+using Fiap.FCG.Game.Application.Eventos.GameEvent;
 using Fiap.FCG.Game.Application.Eventos.PromocaoEvent;
 using Fiap.FCG.Game.Application.Notificacoes.Consultar;
 using Fiap.FCG.Game.Application.Notificacoes.Enviar;
@@ -11,6 +12,7 @@ using Fiap.FCG.Game.Infrastructure.Compras;
 using Fiap.FCG.Game.Infrastructure.Jogos;
 using Fiap.FCG.Game.Infrastructure.Notificacoes;
 using Fiap.FCG.Game.Infrastructure.Promocoes;
+using Fiap.FCG.Game.Infrastructure.PublisherEvent.ComprasEvent;
 using Fiap.FCG.Game.Infrastructure.PublisherEvent.GameEvent;
 using Fiap.FCG.Game.Infrastructure.PublisherEvent.PromocaoEvent;
 using Fiap.FCG.Game.Infrastructure.Usuarios;
@@ -40,6 +42,7 @@ public static class Module
     {
         services.AddScoped<IPromocaoEventPublisher, PromocaoEventPublisher>();
         services.AddScoped<IGameEventPublisher, GameEventPublisher>();
+        services.AddScoped<ICompraEventPublisher, CompraEventPublisher>();
     }
 
     private static void AddServices(IServiceCollection services)
