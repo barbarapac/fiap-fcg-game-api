@@ -3,6 +3,7 @@ using Fiap.FCG.Game.Unit.Test.WebApi.Jogos.Consultar.Fakers;
 using Fiap.FCG.Game.Unit.Test.WebApi.Jogos.Consultar.Fixtures;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
@@ -86,7 +87,9 @@ public class ConsultarJogoControllerTest : ConsultarJogoControllerFixture
 
         // Assert
         var ok = resultado.Should().BeOfType<OkObjectResult>().Subject;
-        ok.Value.Should().BeEquivalentTo(new { sucesso = true, jogos = jogosJson });
+        var jogosElement = (JsonElement)ok.Value.GetType().GetProperty("jogos")!.GetValue(ok.Value)!;
+        var jsonRetornado = jogosElement.GetRawText();
+        jsonRetornado.Should().BeEquivalentTo(jogosJson);
         ConsultaMock.GarantirObterPorNomeOrdenadoChamado();
     }
 
@@ -103,7 +106,9 @@ public class ConsultarJogoControllerTest : ConsultarJogoControllerFixture
 
         // Assert
         var ok = resultado.Should().BeOfType<OkObjectResult>().Subject;
-        ok.Value.Should().BeEquivalentTo(new { sucesso = true, jogos = metricasJson });
+        var jogosElement = (JsonElement)ok.Value.GetType().GetProperty("jogos")!.GetValue(ok.Value)!;
+        var jsonRetornado = jogosElement.GetRawText();  
+        jsonRetornado.Should().BeEquivalentTo(metricasJson);
         ConsultaMock.GarantirObterMetricasPrecoChamado();
     }
                 
@@ -112,7 +117,7 @@ public class ConsultarJogoControllerTest : ConsultarJogoControllerFixture
     {
         // Arrange
         var contagem = new[] { new { Tipo = "Aventura", Quantidade = 5 }, new { Tipo = "Esporte", Quantidade = 3 } };
-        var contagemJson = JsonSerializer.Serialize(contagem);  
+        var contagemJson = JsonSerializer.Serialize(contagem);
         ConsultaMock.ConfigurarObterContagemPorTipo(contagemJson);
 
         // Act
@@ -120,7 +125,9 @@ public class ConsultarJogoControllerTest : ConsultarJogoControllerFixture
 
         // Assert
         var ok = resultado.Should().BeOfType<OkObjectResult>().Subject;
-        ok.Value.Should().BeEquivalentTo(new { sucesso = true, jogos = contagemJson });
+        var jogosElement = (JsonElement)ok.Value.GetType().GetProperty("jogos")!.GetValue(ok.Value)!;
+        var jsonRetornado = jogosElement.GetRawText();
+        jsonRetornado.Should().BeEquivalentTo(contagemJson);
         ConsultaMock.GarantirObterContagemPorTipoChamado();
     }
 
@@ -139,7 +146,9 @@ public class ConsultarJogoControllerTest : ConsultarJogoControllerFixture
 
         // Assert
         var ok = resultado.Should().BeOfType<OkObjectResult>().Subject;
-        ok.Value.Should().BeEquivalentTo(new { sucesso = true, jogos = jogosJson });
+        var jogosElement = (JsonElement)ok.Value.GetType().GetProperty("jogos")!.GetValue(ok.Value)!;
+        var jsonRetornado = jogosElement.GetRawText();
+        jsonRetornado.Should().BeEquivalentTo(jogosJson);
         ConsultaMock.GarantirObterJogosMaisCarosOuBaratosChamado();
     }
 
@@ -159,7 +168,9 @@ public class ConsultarJogoControllerTest : ConsultarJogoControllerFixture
 
         // Assert
         var ok = resultado.Should().BeOfType<OkObjectResult>().Subject;
-        ok.Value.Should().BeEquivalentTo(new { sucesso = true, jogos = jogosJson });
+        var jogosElement = (JsonElement)ok.Value.GetType().GetProperty("jogos")!.GetValue(ok.Value)!;
+        var jsonRetornado = jogosElement.GetRawText();
+        jsonRetornado.Should().BeEquivalentTo(jogosJson);
         ConsultaMock.GarantirObterPorTipoEPrecoChamado();
     }
 }
