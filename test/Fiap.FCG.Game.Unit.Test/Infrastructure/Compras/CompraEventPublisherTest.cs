@@ -2,8 +2,8 @@
 using Fiap.FCG.Game.Application.Eventos.ComprasEvent;
 using Fiap.FCG.Game.Infrastructure.PublisherEvent.ComprasEvent;
 using FluentAssertions;
+using Microsoft.Extensions.Configuration;
 using Moq;
-using Newtonsoft.Json;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,20 +40,64 @@ namespace Fiap.FCG.Game.Unit.Test.Infrastructure.Compras
             await publisher.PublicarCompraRealizadaAsync(evento);
 
             // Assert
-            senderMock.Verify(
-                s => s.SendMessageAsync(It.IsAny<ServiceBusMessage>(), default),
-                Times.Once);
+            senderMock.Verify(s => s.SendMessageAsync(It.IsAny<ServiceBusMessage>(), default), Times.Once);
 
-            // Use ToObjectFromJson to safely deserialize BinaryData
             var deserialized = capturedMessage.Body.ToObjectFromJson<CompraRealizadaEvent>();
-
             deserialized.Should().NotBeNull();
-            deserialized!.CompraId.Should().Be(evento.CompraId);
+            deserialized.CompraId.Should().Be(evento.CompraId);
             deserialized.UsuarioId.Should().Be(evento.UsuarioId);
             deserialized.ValorTotal.Should().Be(evento.ValorTotal);
-
         }
 
-        // OBS: CompraEventPublisherTestable não é mais necessário com o construtor público que aceita o sender mock.
+        [Fact]
+        public void Constructor_ComIConfiguration_DeveCriarSenderComConnectionString()
+        {
+            // Arrange
+            var configMock = new Mock<IConfiguration>();
+            configMock.Setup(c => c["SERVICEBUS_CONNECTION"]).Returns("Endpoint=sb://test/;SharedAccessKeyName=name;SharedAccessKey=key");
+
+            // Act
+            var publisher = new CompraEventPublisher(configMock.Object);
+
+            // Assert
+            publisher.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task DisposeAsync_DeveChamarDisposeDeSenderEClient()
+        {
+            // Arrange
+            var senderMock = new Mock<ServiceBusSender>();
+            var clientMock = new Mock<ServiceBusClient>();
+
+            senderMock.Setup(s => s.DisposeAsync()).Returns(ValueTask.CompletedTask).Verifiable();
+            clientMock.Setup(c => c.DisposeAsync()).Returns(ValueTask.CompletedTask).Verifiable();
+
+            var publisher = new CompraEventPublisherTestable(clientMock.Object, senderMock.Object);
+
+            // Act
+            await publisher.DisposeAsync();
+
+            // Assert
+            senderMock.Verify(s => s.DisposeAsync(), Times.Once);
+            clientMock.Verify(c => c.DisposeAsync(), Times.Once);
+        }
+
+        private class CompraEventPublisherTestable : CompraEventPublisher
+        {
+            private readonly ServiceBusClient _clientInjected;
+            private readonly ServiceBusSender _senderInjected;
+
+            public CompraEventPublisherTestable(ServiceBusClient client, ServiceBusSender sender)
+                : base(sender)
+            {
+                _clientInjected = client;
+                _senderInjected = sender;
+
+                typeof(CompraEventPublisher)
+                    .GetField("_client", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                    ?.SetValue(this, _clientInjected);
+            }
+        }
     }
 }
