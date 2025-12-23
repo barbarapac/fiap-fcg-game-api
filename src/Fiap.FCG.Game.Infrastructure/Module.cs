@@ -1,6 +1,7 @@
 ﻿using Fiap.FCG.Game.Application.Eventos.ComprasEvent;
 using Fiap.FCG.Game.Application.Eventos.GameEvent;
 using Fiap.FCG.Game.Application.Eventos.PromocaoEvent;
+using Fiap.FCG.Game.Application.Jogos.Consultar;
 using Fiap.FCG.Game.Application.Notificacoes.Consultar;
 using Fiap.FCG.Game.Application.Notificacoes.Enviar;
 using Fiap.FCG.Game.Domain.Compras;
@@ -49,6 +50,7 @@ public static class Module
     {
         services.AddScoped<IEmailSender, EmailSender>();
         services.AddScoped<IUsuarioNotificationGateway, UsuarioNotificationGateway>();
+        services.AddScoped<IElasticConnector, ElasticConnector>();
     }
 
     private static void AddAuthentication(IServiceCollection services, IConfiguration configuration)
