@@ -1,5 +1,6 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Fiap.FCG.Game.Application.Eventos.ComprasEvent;
+using Fiap.FCG.Game.Infrastructure.Observability;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Text.Json;
@@ -29,7 +30,8 @@ namespace Fiap.FCG.Game.Infrastructure.PublisherEvent.ComprasEvent
         public async Task PublicarCompraRealizadaAsync(CompraRealizadaEvent evento)
         {
             var json = JsonSerializer.Serialize(evento);
-            var message = new ServiceBusMessage(json);
+            var message = new ServiceBusMessage(json);            
+            message.AddTelemetryContext();
             await _sender.SendMessageAsync(message);
         }
 
