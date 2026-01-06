@@ -3,6 +3,7 @@ using Fiap.FCG.Game.Application.Jogos.Consultar;
 using Fiap.FCG.Game.Application.Notificacoes.Consultar;
 using Fiap.FCG.Game.Application.Promocoes.Consultar;
 using Microsoft.Extensions.DependencyInjection;
+using MediatR;
 
 namespace Fiap.FCG.Game.Application;
 
@@ -13,8 +14,9 @@ public static class Module
     {
         services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssemblyContaining(typeof(Module)));
-        
-        
+                
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(Observability.LoggingBehavior<,>));
+
         services.AddScoped<IConsultaNotificacaoQuery, ConsultaNotificacaoQuery>();
         services.AddScoped<IConsultaPromocaoQuery, ConsultaPromocaoQuery>();
         services.AddScoped<IConsultaJogoQuery, ConsultaJogoQuery>();

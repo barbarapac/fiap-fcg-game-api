@@ -1,34 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>$(TargetFramework)</TargetFramework>
-        <LangVersion>$(LangVersion)</LangVersion>
-        <Nullable>$(Nullable)</Nullable>
-        <ImplicitUsings>$(ImplicitUsings)</ImplicitUsings>
-        <ManagePackageVersionsCentrally>$(ManagePackageVersionsCentrally)</ManagePackageVersionsCentrally>
-        <GenerateRuntimeConfigurationFiles>$(GenerateRuntimeConfigurationFiles)</GenerateRuntimeConfigurationFiles>
-    </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>$(TargetFramework)</TargetFramework>
+		<LangVersion>$(LangVersion)</LangVersion>
+		<Nullable>$(Nullable)</Nullable>
+		<ImplicitUsings>$(ImplicitUsings)</ImplicitUsings>
+		<ManagePackageVersionsCentrally>$(ManagePackageVersionsCentrally)</ManagePackageVersionsCentrally>
+		<GenerateRuntimeConfigurationFiles>$(GenerateRuntimeConfigurationFiles)</GenerateRuntimeConfigurationFiles>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Google.Protobuf" />
-        <PackageReference Include="Grpc.Net.Client" />
-        <PackageReference Include="Grpc.Net.ClientFactory" />       
-        <PackageReference Include="Grpc.Tools">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="MediatR" />
-        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
-        <PackageReference Include="Swashbuckle.AspNetCore" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />        
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Google.Protobuf" />
+		<PackageReference Include="Grpc.Net.Client" />
+		<PackageReference Include="Grpc.Net.ClientFactory" />
+		<PackageReference Include="Grpc.Tools">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="MediatR" />
+		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
+		<PackageReference Include="Swashbuckle.AspNetCore" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
+		<PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" />
+		<PackageReference Include="OpenTelemetry.Extensions.Hosting" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Http" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" />
+	</ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Fiap.FCG.Game.Application\Fiap.FCG.Game.Application.csproj" />
-      <ProjectReference Include="..\Fiap.FCG.Game.Domain\Fiap.FCG.Game.Domain.csproj" />
-      <ProjectReference Include="..\Fiap.FCG.Game.Infrastructure\Fiap.FCG.Game.Infrastructure.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Fiap.FCG.Game.Application\Fiap.FCG.Game.Application.csproj" />
+		<ProjectReference Include="..\Fiap.FCG.Game.Domain\Fiap.FCG.Game.Domain.csproj" />
+		<ProjectReference Include="..\Fiap.FCG.Game.Infrastructure\Fiap.FCG.Game.Infrastructure.csproj" />
+	</ItemGroup>
 
 </Project>
