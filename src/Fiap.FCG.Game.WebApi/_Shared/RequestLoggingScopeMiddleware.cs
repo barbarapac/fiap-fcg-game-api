@@ -1,8 +1,9 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Fiap.FCG.Game.WebApi._Shared;
 
@@ -20,13 +21,15 @@ public class RequestLoggingScopeMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        var activity = Activity.Current;
-
         var correlationId =
             context.Request.Headers.TryGetValue(CorrelationHeader, out var headerValue)
             && !string.IsNullOrWhiteSpace(headerValue)
                 ? headerValue.ToString()
-                : (activity?.TraceId.ToString() ?? context.TraceIdentifier);
+                : (Activity.Current?.TraceId.ToString() ?? context.TraceIdentifier);
+
+        Activity.Current?.SetTag("CorrelationId", correlationId);
+
+        var activity = Activity.Current;
 
         context.Response.OnStarting(() =>
         {
@@ -36,12 +39,12 @@ public class RequestLoggingScopeMiddleware
 
         using var scope = _logger.BeginScope(new[]
         {
-            new KeyValuePair<string, object?>("CorrelationId", correlationId),
-            new KeyValuePair<string, object?>("TraceId", activity?.TraceId.ToString()),
-            new KeyValuePair<string, object?>("SpanId", activity?.SpanId.ToString()),
-            new KeyValuePair<string, object?>("HttpMethod", context.Request.Method),
-            new KeyValuePair<string, object?>("HttpPath", context.Request.Path.ToString())
-        });
+        new KeyValuePair<string, object?>("CorrelationId", correlationId),
+        new KeyValuePair<string, object?>("TraceId", activity?.TraceId.ToString()),
+        new KeyValuePair<string, object?>("SpanId", activity?.SpanId.ToString()),
+        new KeyValuePair<string, object?>("HttpMethod", context.Request.Method),
+        new KeyValuePair<string, object?>("HttpPath", context.Request.Path.ToString())
+    });
 
         var sw = Stopwatch.StartNew();
         _logger.LogInformation("Requisição HTTP iniciada");
@@ -56,11 +59,12 @@ public class RequestLoggingScopeMiddleware
                 context.Response.StatusCode,
                 sw.ElapsedMilliseconds);
         }
-        catch
+        catch (Exception ex)
         {
             sw.Stop();
 
             _logger.LogError(
+                ex,
                 "Falha ao processar requisição HTTP. DuracaoMs: {DuracaoMs}",
                 sw.ElapsedMilliseconds);
 
