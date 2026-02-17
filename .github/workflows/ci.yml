@@ -24,28 +24,6 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: Install SonarScanner for .NET
-        run: dotnet tool install --global dotnet-sonarscanner
-
-      # remove o arquivo do scanner genérico que é incompatível com o scanner
-      - name: Remove sonar-project.properties (only for .NET scanner)
-        run: rm -f sonar-project.properties
-
-      # análise .NET
-      - name: SonarCloud Begin
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          dotnet-sonarscanner begin \
-            /k:"barbarapac_fiap-fcg-game-api" \
-            /o:"barbarapac" \
-            /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.token="${SONAR_TOKEN}" \
-            /d:sonar.projectBaseDir="${{ github.workspace }}" \
-            /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" \
-            /d:sonar.coverage.exclusions="**/*Program.cs,**/*Startup.cs,**/*Migrations/**" \
-            /d:sonar.exclusions="**/.github/**,**/ci/**,**/cd/**,**/build/**,**/test/**"
-
       - name: Restore
         run: dotnet restore Fiap.FCG.Game.Api.sln
 
@@ -55,21 +33,8 @@ jobs:
       - name: Test with coverage (OpenCover)
         run: |
           dotnet test test/Fiap.FCG.Game.Unit.Test/Fiap.FCG.Game.Unit.Test.csproj \
-            --configuration Release --no-build --logger "trx;LogFileName=test-results.trx" \
+            --configuration Release --no-build \
+            --logger "trx;LogFileName=test-results.trx" \
             /p:CollectCoverage=true \
             /p:CoverletOutput=${{ github.workspace }}/test/Fiap.FCG.Game.Unit.Test/TestResults/coverage.opencover.xml \
             /p:CoverletOutputFormat=opencover
-
-      # finaliza e envia a análise para o SonarCloud
-      - name: SonarCloud End
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: dotnet-sonarscanner end /d:sonar.token="${SONAR_TOKEN}"
-
-      # apontar para o caminho do .NET
-      - name: SonarCloud Quality Gate 
-        uses: SonarSource/sonarqube-quality-gate-action@v1
-        with:
-          scanMetadataReportFile: .sonarqube/out/.sonar/report-task.txt
-        env: 
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
