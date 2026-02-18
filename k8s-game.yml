@@ -11,7 +11,7 @@ metadata:
 data:
   ASPNETCORE_URLS: "http://+:8080"
   ASPNETCORE_ENVIRONMENT: "Production"
-  URI_USUARIO_API: "http://20.114.99.70"
+  URI_USUARIO_API: "http://fcg-user-api-svc.fcg-user-ns.svc.cluster.local"
 
   ENVIA_NOTIFICACAO_INTERVALO_MINUTOS: "60"
 ---
